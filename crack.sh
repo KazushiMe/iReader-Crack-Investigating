@@ -1,6 +1,6 @@
 #!/bin/bash
 
-version="r17"
+version="r19"
 
 home=$(cd `dirname $0`; pwd)
 chmod -R 777 $home
@@ -44,6 +44,7 @@ function init_adb()
 {
   WSL=$(echo `uname -a` | grep -o "Microsoft" | wc -l)
   if [ $WSL -ge "1" ]; then
+    WSL=true
     log "IS WSL Subsystem"
     echo "检测到使用 Windows 10 Linux 子系统"
     echo "请安装 Windows 的 adb 驱动，打开对应版本的 adb 程序"
@@ -87,6 +88,14 @@ function check_env()
       log "Need adb, exit"
       exit
     fi
+  fi
+  
+  if [ $WSL ]; then
+    data_dir="/mnt/d/iReader-Crack"
+    echo_dir="Windows 系统 D:\\iReader-Crack\\"
+  else
+    data_dir="$home/data"
+    echo_dir=$data_dir
   fi
   
   echo ""
@@ -363,9 +372,9 @@ function install_ota()
     return
   fi
   echo "请按照教程获取OTA更新包并进行修改"
-  echo "将修改后的更新包放入 $home 文件夹内，重命名为update.zip"
+  echo "将修改后的更新包放入 $echo_dir 文件夹内，重命名为update.zip"
   pause
-  if [ ! -f "$home/update.zip" ]; then
+  if [ ! -f "$data_dir/update.zip" ]; then
     echo ""
     echo "更新包不存在"
     pause "按任意键返回"
@@ -389,7 +398,7 @@ function install_ota()
   adb shell "/system/bin/mount -t ext4 /dev/block/mmcblk0p6 /cache"
   echo ""
   echo "正在复制OTA更新包"
-  adb push $home/update.zip /cache/update.zip
+  adb push $data_dir/update.zip /cache/update.zip
   echo ""
   echo "正在安装更新"
   adb shell "/system/bin/recovery --update_package=/cache/update.zip"
@@ -415,13 +424,13 @@ function install_apk()
     return
   fi
   echo ""
-  if [ ! -d "$home/apk" ]; then
-    mkdir "$home/apk"
+  if [ ! -d "$data_dir" ]; then
+    mkdir "$data_dir"
   fi
-  echo "将需要安装的apk文件放入 $home/apk/ 文件夹中"
+  echo "将需要安装的apk文件放入 $echo_dir 文件夹中"
   echo "建议使用英文命名"
   pause "按任意键开始安装"
-  if [ ! -f "$home/apk/*.apk" ]; then
+  if [ ! -f "$data_dir/*.apk" ]; then
     echo ""
     echo "没有找到apk"
     pause "按任意键返回"
@@ -429,7 +438,7 @@ function install_apk()
   fi
   echo ""
   echo "正在安装……"
-  cd "$home/apk"
+  cd "$data_dir"
   adb install *.apk
   echo "安装完成"
   return
@@ -446,13 +455,13 @@ function install_root()
     return
   fi
   echo ""
-  if [ ! -d "$home/apk" ]; then
-    mkdir "$home/apk"
+  if [ ! -d "$data_dir" ]; then
+    mkdir "$data_dir"
   fi
-  echo "将SuperSU授权管理的apk文件放入 $home/apk/ 文件夹中，命名为 Superuser.apk"
+  echo "将SuperSU授权管理的apk文件放入 $echo_dir 文件夹中，命名为 Superuser.apk"
   echo "由于版权问题不自带SuperSU，可从群文件获取apk"
   pause "按任意键开始执行root"
-  if [ ! -f "$home/apk/Superuser.apk" ]; then
+  if [ ! -f "$data_dir/Superuser.apk" ]; then
     echo ""
     echo "没有找到SuperSU"
     pause "按任意键返回"
@@ -463,7 +472,7 @@ function install_root()
   adb shell mount -o rw,remount /system
   adb push $home/crack/bin/su /system/xbin
   adb push $home/crack/bin/su /system/bin
-  adb push $home/apk/Superuser.apk /system/app/
+  adb push $data_dir/Superuser.apk /system/app/
   adb shell chown 0.0 /system/xbin/su
   adb shell chmod 6755 /system/xbin/su
   adb shell chown 0.0 /system/bin/su
@@ -502,7 +511,7 @@ function shortcut()
 
 clear
 echo "iReader-Crack工具箱"
-echo "Credit: KazushiMe"
+echo "Credit: Kazushi"
 echo "本作品采用知识共享署名-非商业性使用-禁止演绎 3.0 中国大陆许可协议进行许可。"
 echo "该工具箱完全免费，请在协议允许的范围内进行使用"
 sleep 2
