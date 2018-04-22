@@ -40,30 +40,7 @@ function stage()
   log "========== Stage $1 =========="
 }
 
-function init_adb()
-{
-  WSL=$(echo `uname -a` | grep -o "Microsoft" | wc -l)
-  if [ $WSL -ge "1" ]; then
-    WSL=true
-    log "IS WSL Subsystem"
-    echo "检测到使用 Windows 10 Linux 子系统"
-    echo "请安装 Windows 的 adb 驱动，打开对应版本的 adb 程序"
-    echo "所需adb版本: " `adb version | head -1`
-    echo "Windows中命令行操作如下:"
-    echo "adb kill-server"
-    echo "adb start-server"
-    pause "完成后不要关闭Windows的adb，按任意键继续"
-  else
-    echo "初始化adb……"
-    log "Initializing adb"
-    adb kill-server
-  fi
-  adb start-server
-  echo "若出现error则adb服务启动失败，请进行检查"
-  sleep 3
-}
-
-function check_env()
+function init()
 {
   echo "正在检测环境……"
   issue=`cat /etc/issue`
@@ -90,6 +67,26 @@ function check_env()
     fi
   fi
   
+  echo ""
+  
+  WSL=$(echo `uname -a` | grep -o "Microsoft" | wc -l)
+  if [ $WSL -ge "1" ]; then
+    WSL=true
+    log "IS WSL Subsystem"
+    echo "检测到使用 Windows 10 Linux 子系统"
+    echo "请安装 Windows 的 adb 驱动，打开对应版本的 adb 程序"
+    echo "所需adb版本: " `adb version | head -1`
+    echo "Windows中命令行操作如下:"
+    echo "adb kill-server"
+    echo "adb start-server"
+    pause "完成后不要关闭Windows的adb，按任意键继续"
+  else
+    echo "初始化adb……"
+    log "Initializing adb"
+    adb kill-server
+  fi
+  adb start-server
+  
   if [ $WSL ]; then
     data_dir="/mnt/d/iReader-Crack"
     echo_dir="Windows 系统 D:\\iReader-Crack\\"
@@ -98,7 +95,8 @@ function check_env()
     echo_dir=$data_dir
   fi
   
-  echo ""
+  echo "若出现error则adb服务启动失败，请进行检查"
+  sleep 3
 }
 
 function adb_state()
@@ -517,8 +515,7 @@ echo "该工具箱完全免费，请在协议允许的范围内进行使用"
 sleep 2
 pause "按任意键启动工具箱"
 clear
-check_env
-init_adb
+init
 while true
 do
   main
