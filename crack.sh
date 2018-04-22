@@ -369,6 +369,10 @@ function install_ota()
     pause "按任意键返回"
     return
   fi
+  echo ""
+  if [ ! -d "$data_dir" ]; then
+    mkdir "$data_dir"
+  fi
   echo "请按照教程获取OTA更新包并进行修改"
   echo "将修改后的更新包放入 $echo_dir 文件夹内，重命名为update.zip"
   pause
