@@ -12,6 +12,8 @@ macOS 系统及部分虚拟机暂不兼容，部分 Windows 版本可能无法�
 
 欢迎加入 QQ 群组了解详情，群号码：120581715，验证消息：ireaderFans
 
+近期将上线 FAQ 常见问题解答
+
 ## 协议
 
 <a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/3.0/cn/"><img alt="知识共享许可协议" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-nd/3.0/cn/88x31.png" /></a><br />本作品采用<a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/3.0/cn/">知识共享署名-非商业性使用-禁止演绎 3.0 中国大陆许可协议</a>进行许可。
@@ -78,3 +80,11 @@ iReader官方请的工程师，连Recovery的adb都忘关了……
 新品T6还是没改……
 
 清空数据进入Recovery➡加入adb（改build.prop）➡强制开启adb（否则会被阅读器主程序关闭）
+
+## 捐赠
+
+如果觉得我的作品对您有帮助，可以请我喝一杯咖啡。
+
+微信扫描：
+
+![iReader-Crack 捐赠](https://www.einkfans.com/upload/attach/201804/123_8ESAC978RWRDWQW.png)
