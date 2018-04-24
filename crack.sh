@@ -58,7 +58,8 @@ function init()
       log "adb Installing"
       sudo apt-get update
       sudo apt-get install adb
-      check_env
+      init
+      return
     else
       echo "请安装adb后再执行本程序"
       pause "按任意键退出"
