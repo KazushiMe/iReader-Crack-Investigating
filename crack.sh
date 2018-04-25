@@ -119,12 +119,14 @@ function recovery()
   adb push $home/crack/bin /system/bin/
   adb push $home/crack/lib /system/lib/
   adb shell "/system/bin/mount -t ext4 /dev/block/mmcblk0p5 /system"
+  log "Mount /system Done"
   adb shell "echo 'persist.service.adb.enable=1' >> /system/build.prop"
   adb shell "echo 'persist.service.debuggable=1' >> /system/build.prop"
   adb shell "echo 'persist.sys.usb.config=mtp,adb' >> /system/build.prop"
   adb shell "echo 'ro.secure=0' >> /system/build.prop"
   adb shell "echo 'ro.adb.secure=0' >> /system/build.prop"
   adb shell "echo 'ro.debuggable=1' >> /system/build.prop"
+  log "Build.prop Modified Successfully"
 }
 
 function enable_adb()
@@ -145,16 +147,21 @@ function enable_adb()
 
 function enable_adb_2()
 {
-  log "Enabling Adb During Booting - Alternative Approach"
+  log "Enabling Adb During Booting - Auto Approach"
+  times=1
   while true
   do
+    log "Loop Count: $times"
     adb shell "echo 'mtp,adb' > /data/property/persist.sys.usb.config"
     adb shell "echo '1' > /data/property/persist.service.adb.enable"
     adb_state
     if [[ $1 == 0 ]]; then
       log "Connection Closed"
       break
+    else
+      log "Device State: $1"
     fi
+    times=$times+1
   done
   #主程序会关闭adb，不得不循环破解
 }
