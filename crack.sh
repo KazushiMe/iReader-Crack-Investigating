@@ -148,10 +148,11 @@ function enable_adb_2()
   log "Enabling Adb During Booting - Alternative Approach"
   while true
   do
-    adb shell "echo 'mtp,adb' > /data/property/persist.sys.usb.config" > /dev/null
-    adb shell "echo '1' > /data/property/persist.service.adb.enable" > /dev/null
+    adb shell "echo 'mtp,adb' > /data/property/persist.sys.usb.config"
+    adb shell "echo '1' > /data/property/persist.service.adb.enable"
     adb_state
     if [[ $1 == 0 ]]; then
+      log "Connection Closed"
       break
     fi
   done
@@ -316,7 +317,8 @@ function crack_auto()
     sleep 0.1
     adb_state
     if [[ $? == 2 ]]; then
-      break;
+      log "Recovery Mode"
+      break
     fi
   done
   
@@ -329,13 +331,14 @@ function crack_auto()
   
   stage "4" "执行破解"
   echo "等待出现进度条……"
-  sleep 5
+  sleep 3
   while true
   do
     sleep 0.1
     adb_state
     if [[ $? == 1 ]]; then
-      break;
+      log "Have found adb device"
+      break
     fi
   done
   
