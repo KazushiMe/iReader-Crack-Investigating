@@ -1,6 +1,7 @@
 #!/bin/bash
 
-version="r19"
+version="r20"
+update="r20 优化破解逻辑"
 
 home=$(cd `dirname $0`; pwd)
 chmod -R 777 $home
@@ -161,7 +162,7 @@ function enable_adb_2()
     else
       log "Device State: $1"
     fi
-    times=$times+1
+    times=`expr $times + 1`
   done
   #主程序会关闭adb，不得不循环破解
 }
@@ -219,7 +220,7 @@ function crack()
   clear
   
   log "Version: "$version
-  echo "       iReader Light/Ocean 阅读器 破解"
+  echo "     iReader 系列 阅读器 破解 手动版"
   stage "1" "使用前须知"
   
   echo "注意事项:"
@@ -261,6 +262,8 @@ function crack()
   stage "4" "执行破解"
   echo "预计需要1分钟"
   echo ""
+  echo "如果此步骤失败，请重新破解，在该步骤阅读器闪屏且出现 iReader 标识时立即重新插入数据线并回车"
+  echo ""
   pause "显示进度条时按任意键继续"
   
   enable_adb
@@ -289,7 +292,7 @@ function crack_auto()
   clear
   
   log "Version: "$version" Auto Approach"
-  echo " iReader Light/Ocean 阅读器 破解 自动版（测试）"
+  echo "     iReader 系列 阅读器 破解 自动版"
   stage "1" "使用前须知"
   
   echo "注意事项:"
@@ -307,7 +310,7 @@ function crack_auto()
     log "Already connected adb device"
     log `adb devices`
     pause
-    crack_auto
+    return
   fi
   sleep 1
   
@@ -321,7 +324,6 @@ function crack_auto()
   log "Checking Recovery"
   while true
   do
-    sleep 0.1
     adb_state
     if [[ $? == 2 ]]; then
       log "Recovery Mode"
@@ -337,11 +339,11 @@ function crack_auto()
   log "Waiting for Reboot"
   
   stage "4" "执行破解"
-  echo "等待出现进度条……"
-  sleep 3
+  echo "等待系统重载……"
+  echo "如果长时间停在此步骤，请重新破解，并在该步骤阅读器闪屏且出现 iReader 标识时立即重新插入数据线"
+  sleep 1
   while true
   do
-    sleep 0.1
     adb_state
     if [[ $? == 1 ]]; then
       log "Have found adb device"
@@ -352,7 +354,7 @@ function crack_auto()
   enable_adb_2
   
   echo ""
-  echo "请手动重启阅读器"
+  echo "请手动重启阅读器，可能需要重新插入数据线"
   log "Waiting for Reboot Manually"
   pause "重启进阅读器界面后按任意键继续"
   
@@ -527,6 +529,11 @@ echo "iReader-Crack工具箱"
 echo "Credit: Kazushi"
 echo "本作品采用知识共享署名-非商业性使用-禁止演绎 3.0 中国大陆许可协议进行许可。"
 echo "该工具箱完全免费，请在协议允许的范围内进行使用"
+if [ -f "$home/log.last" ]; then
+  echo ""
+  echo "更新日志："
+  echo "$update"
+fi
 sleep 2
 pause "按任意键启动工具箱"
 clear
