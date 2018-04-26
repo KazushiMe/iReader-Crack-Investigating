@@ -6,7 +6,7 @@ iReader Plus、Light、Ocean 与 T6 阅读器破解，支持最新系统（截�
 
 Plus建议降级以使用蓝牙听书功能：[教程](https://www.einkfans.com/thread-60.htm)
 
-目前支持Linux系统进行破解，推荐Ubuntu，支持Windows 10 Linux 子系统
+目前支持 Linux 系统进行破解，推荐 Ubuntu，支持 Windows 10 Linux 子系统
 
 macOS 系统及部分虚拟机暂不兼容，部分 Windows 版本可能无法正常使用 WSL
 
@@ -50,11 +50,17 @@ rm -rf ./iReader-Crack
 
 ### 更新或恢复
 
-1.	获取官方OTA（在系统更新下载，不要安装），解压得到update.zip
+1.	获取官方OTA（在系统更新下载，不要安装）
 
-2.	对update.zip包进行修改，删除update.zip下的recovery文件夹及boot.img（防止更新封堵破解）
+```
+adb pull /sdcard/adupsfota/update.zip ~
+```
 
-3.	打开META-INF>com>google>android>updater-script，修改文件：
+解压用户主目录下的 update.zip 得到*真正的* update.zip
+
+2.	对 update.zip 包进行修改，删除 update.zip 下的 recovery 文件夹及 boot.img（防止更新封堵破解）
+
+3.	打开 zip 包内 META-INF>com>google>android>updater-script，修改文件：
 
 ```
 删除 首行 (!less_than…… 的版本校验
@@ -71,7 +77,9 @@ rm -rf ./iReader-Crack
 
 ### 视频教程
 
-[iReader阅读器开启adb教程](https://www.bilibili.com/video/av21532543/)  by 愿乘风归去
+*原生 Linux 教程*：[iReader阅读器开启adb教程](https://www.bilibili.com/video/av21532543/)  by 愿乘风归去
+
+Windows 10 版请等待更新
 
 ## 原理
 
@@ -83,7 +91,7 @@ iReader官方请的工程师，连Recovery的adb都忘关了……
 
 ## 捐赠
 
-如果觉得我的作品对您有帮助，可以请我喝一杯咖啡。
+#### 如果觉得我的作品对您有帮助，可以请我喝一杯咖啡。
 
 微信扫描：
 
