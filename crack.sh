@@ -1,7 +1,7 @@
 #!/bin/bash
 
 version="r20"
-update="r20 优化破解逻辑"
+update="r20 优化破解逻辑\nr19 修复WSL相关问题"
 
 home=$(cd `dirname $0`; pwd)
 chmod -R 777 $home
@@ -27,7 +27,7 @@ function log()
     #8进制识别fix: 10#string
     time_ns=$((10#`date "+%N"`))
     time_us=$((10#$time_ns / 1000))
-    time_us_formatted=" "`printf "%06d\n" $time_us`"us"
+    time_us_formatted=" "`printf "%06d\n" $time_us`
     time_formatted=${time}${time_us_formatted}
     echo "$time_formatted  $*"
   fi
@@ -38,7 +38,7 @@ function stage()
 {
   echo ""
   echo "第 $1 阶段: $2"
-  log "========== Stage $1 =========="
+  log "========== Stage $1 : $2 =========="
 }
 
 function init()
@@ -96,8 +96,7 @@ function init()
     data_dir="$home/data"
     echo_dir=$data_dir
   fi
-  
-  echo "若出现error则adb服务启动失败，请进行检查"
+
   sleep 3
 }
 
@@ -189,10 +188,11 @@ function main()
   [[ $logging == 1 ]] && echo "               debug 已开启"
   adb_state
   if [[ $? == 1 ]]; then
-    echo "              USB调试已连接"
+    echo "              USB 调试已连接"
   elif [[ $? == 2 ]]; then
-    echo "           已进入Recovery模式"
+    echo "          已进入 Recovery 模式"
   fi
+  [[ $WSL ]] && echo "若此处出现 error 提示则adb服务启动失败，请进行检查"
   echo ""
   echo "            1. 运行破解主程序（自动版）"
   echo ""
@@ -202,7 +202,7 @@ function main()
   echo ""
   echo "            4. 批量安装程序"
   echo ""
-  echo "            5. 安装root与Superuser"
+  echo "            5. 安装 root 与 Superuser"
   echo ""
   echo "   A. 打开设置  B. 模拟返回键  C. 模拟主页键"
   echo ""
@@ -271,17 +271,17 @@ function crack()
   
   echo ""
   echo "请手动重启阅读器"
-  log "Waiting for Reboot Manually"
+  log "Waiting for Reboot Manually..."
   pause "重启进阅读器界面后按任意键继续"
   
   echo ""
   adb_state
   if [[ $? == 1 ]]; then
     echo "破解成功，现可以通过adb安装程序"
-    log "Done"
+    log "Crack Done!"
   else
     echo "破解失败，请尝试重新破解或进行反馈"
-    log "Failed"
+    log "Crack Failed!"
     log `adb devices`
   fi
   pause "按任意键返回"
@@ -387,6 +387,8 @@ function install_ota()
   if [ ! -d "$data_dir" ]; then
     mkdir "$data_dir"
   fi
+  echo "注意: 目前 OTA 更新包需要手动修改，近期因手动更新而变砖的案例较多，请三思而后行"
+  echo ""
   echo "请按照教程获取OTA更新包并进行修改"
   echo "将修改后的更新包放入 $echo_dir 文件夹内，重命名为update.zip"
   pause
@@ -530,13 +532,16 @@ echo "iReader-Crack工具箱"
 echo "Credit: Kazushi"
 echo "本作品采用知识共享署名-非商业性使用-禁止演绎 3.0 中国大陆许可协议进行许可。"
 echo "该工具箱完全免费，请在协议允许的范围内进行使用"
+echo ""
+echo "详细使用方法请访问: https://github.com/KazushiMe/iReader-Crack/"
 if [ ! -f "$home/updated" ]; then
   echo ""
-  echo "$ver 更新日志："
-  echo "$update"
+  echo "近期更新日志："
+  echo -e "$update"
   echo "" > "$home/updated"
 fi
 sleep 2
+echo ""
 pause "按任意键启动工具箱"
 clear
 init
