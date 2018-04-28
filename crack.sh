@@ -1,7 +1,7 @@
 #!/bin/bash
 
 version="r21"
-update="r21 高亮注意事项\nr20 优化破解逻辑\nr19 修复WSL相关问题"
+update="r21 高亮注意事项，修复自动版识别bug\nr20 优化破解逻辑\nr19 修复WSL相关问题"
 
 home=$(cd `dirname $0`; pwd)
 chmod -R 777 $home
@@ -161,11 +161,11 @@ function enable_adb_2()
     adb shell "echo 'mtp,adb' > /data/property/persist.sys.usb.config"
     adb shell "echo '1' > /data/property/persist.service.adb.enable"
     adb_state
-    if [[ $1 == 0 ]]; then
+    if [[ $? == 0 ]]; then
       log "Connection Closed"
       break
     else
-      log "Device State: $1"
+      log "Device State: $?"
     fi
     times=`expr $times + 1`
   done
