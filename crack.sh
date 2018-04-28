@@ -175,6 +175,7 @@ function update()
   git pull
   echo ""
   echo "更新完成"
+  rm -rf "$home/updated"
   sleep 3
   $home/crack.sh;exit
 }
@@ -529,10 +530,11 @@ echo "iReader-Crack工具箱"
 echo "Credit: Kazushi"
 echo "本作品采用知识共享署名-非商业性使用-禁止演绎 3.0 中国大陆许可协议进行许可。"
 echo "该工具箱完全免费，请在协议允许的范围内进行使用"
-if [ ! -f "$home/log.last" ]; then
+if [ ! -f "$home/updated" ]; then
   echo ""
-  echo "更新日志："
+  echo "$ver 更新日志："
   echo "$update"
+  echo "" > "$home/updated"
 fi
 sleep 2
 pause "按任意键启动工具箱"
