@@ -1,7 +1,7 @@
 #!/bin/bash
 
-version="r20"
-update="r20 优化破解逻辑\nr19 修复WSL相关问题"
+version="r21"
+update="r21 高亮注意事项\nr20 优化破解逻辑\nr19 修复WSL相关问题"
 
 home=$(cd `dirname $0`; pwd)
 chmod -R 777 $home
@@ -18,6 +18,11 @@ function pause()
   else
     read -n 1 -p "按任意键继续"
   fi
+}
+
+function warning()
+{
+  echo -e "\033[31;5m$*\033[0m"
 }
 
 function log()
@@ -47,12 +52,12 @@ function init()
   issue=`cat /etc/issue`
   adb_exec=`which adb`
   if [[ ${issue:0:6} != "Ubuntu" ]]; then
-    echo "当前使用的系统不是Ubuntu，可能不受支持"
+    warning "当前使用的系统不是Ubuntu，可能不受支持"
     log "Not Ubuntu"
     pause
   fi
   if [[ ${adb_exec:0:1} != "/" ]]; then
-    echo "未检测到adb程序"
+    warning "未检测到adb程序"
     log "adb Not Found"
     if [[ ${issue:0:6} == "Ubuntu" ]]; then
       pause "按任意键执行安装，可能需要输入密码"
@@ -62,7 +67,7 @@ function init()
       init
       return
     else
-      echo "请安装adb后再执行本程序"
+      warning "请安装adb后再执行本程序"
       pause "按任意键退出"
       log "Need adb, exit"
       exit
@@ -76,12 +81,13 @@ function init()
     WSL=true
     log "IS WSL Subsystem"
     echo "检测到使用 Windows 10 Linux 子系统"
-    echo "请安装 Windows 的 adb 驱动，打开对应版本的 adb 程序"
-    echo "所需adb版本: " `adb version | head -1`
-    echo "Windows中命令行操作如下:"
+    warning "请安装 Windows 的 adb 驱动，打开对应版本的 adb 程序"
+    warning "所需adb版本: " `adb version | head -1`
+    warning "Windows中命令行操作如下:"
     echo "adb kill-server"
     echo "adb start-server"
-    pause "完成后不要关闭Windows的adb，按任意键继续"
+    warning "完成后不要关闭Windows的adb"
+    pause
   else
     echo "初始化adb……"
     log "Initializing adb"
@@ -192,7 +198,7 @@ function main()
   elif [[ $? == 2 ]]; then
     echo "          已进入 Recovery 模式"
   fi
-  [[ $WSL ]] && echo "若此处出现 error 提示则adb服务启动失败，请进行检查"
+  [[ $WSL ]] && warning "若此处出现 error 提示则adb服务启动失败，请进行检查"
   echo ""
   echo "            1. 运行破解主程序（自动版）"
   echo ""
@@ -224,8 +230,8 @@ function crack()
   echo "     iReader 系列 阅读器 破解 手动版"
   stage "1" "使用前须知"
   
-  echo "注意事项:"
-  echo "1. 请确保安装好相关组件，包括adb及adb驱动"
+  warning "注意事项:"
+  warning "1. 请确保安装好相关组件，包括adb及adb驱动"
   echo "2. 请严格按照程序提示操作，否则有可能变砖"
   echo "3. 操作前备份好用户数据(电纸书)"
   echo ""
@@ -237,7 +243,7 @@ function crack()
   adb_state
   if [[ $? != 0 ]]; then
     echo ""
-    echo "已连接开启USB调试的Android设备，请移除后重试"
+    warning "已连接开启USB调试的Android设备，请移除后重试"
     log "Already connected adb device"
     log `adb devices`
     pause
@@ -261,11 +267,11 @@ function crack()
   log "Waiting for Reboot"
   
   stage "4" "执行破解"
-  echo "预计需要1分钟"
+  echo "预计需要1分钟，请耐心等待"
   echo ""
   echo "如果此步骤失败，请重新破解，在该步骤阅读器闪屏且出现 iReader 标识时立即重新插入数据线并回车"
   echo ""
-  pause "显示进度条时按任意键继续"
+  pause "显示进度条时按任意键继续，出现 error: device not found 消息请无视"
   
   enable_adb
   
@@ -280,7 +286,7 @@ function crack()
     echo "破解成功，现可以通过adb安装程序"
     log "Crack Done!"
   else
-    echo "破解失败，请尝试重新破解或进行反馈"
+    warning "破解失败，请尝试重新破解或进行反馈"
     log "Crack Failed!"
     log `adb devices`
   fi
@@ -296,8 +302,8 @@ function crack_auto()
   echo "     iReader 系列 阅读器 破解 自动版"
   stage "1" "使用前须知"
   
-  echo "注意事项:"
-  echo "1. 请确保安装好相关组件，包括adb及adb驱动"
+  warning "注意事项:"
+  warning "1. 请确保安装好相关组件，包括adb及adb驱动"
   echo "2. 请严格按照程序提示操作，否则有可能变砖"
   echo "3. 操作前备份好用户数据(电纸书)"
   echo ""
@@ -307,7 +313,7 @@ function crack_auto()
   adb_state
   if [[ $? != 0 ]]; then
     echo ""
-    echo "已连接开启USB调试的Android设备，请移除后重试"
+    warning "已连接开启USB调试的Android设备，请移除后重试"
     log "Already connected adb device"
     log `adb devices`
     pause
@@ -355,7 +361,7 @@ function crack_auto()
   enable_adb_2
   
   echo ""
-  echo "请手动重启阅读器，可能需要重新插入数据线"
+  warning "请手动重启阅读器，可能需要重新插入数据线"
   log "Waiting for Reboot Manually"
   pause "重启进阅读器界面后按任意键继续"
   
@@ -365,7 +371,7 @@ function crack_auto()
     echo "破解成功，现可以通过adb安装程序"
     log "Done"
   else
-    echo "破解失败，请尝试重新破解或进行反馈"
+    warning "破解失败，请尝试重新破解或进行反馈"
     log "Failed"
     log `adb devices`
   fi
@@ -379,7 +385,7 @@ function install_ota()
   stage "1" "准备阶段"
   adb_state
   if [[ $? == 0 ]]; then
-    echo "未破解或未连接"
+    warning "未破解或未连接"
     pause "按任意键返回"
     return
   fi
@@ -387,14 +393,14 @@ function install_ota()
   if [ ! -d "$data_dir" ]; then
     mkdir "$data_dir"
   fi
-  echo "注意: 目前 OTA 更新包需要手动修改，近期因手动更新而变砖的案例较多，请三思而后行"
+  warning "注意: 目前 OTA 更新包需要手动修改，近期因手动更新而变砖的案例较多，请三思而后行"
   echo ""
   echo "请按照教程获取OTA更新包并进行修改"
   echo "将修改后的更新包放入 $echo_dir 文件夹内，重命名为update.zip"
   pause
   if [ ! -f "$data_dir/update.zip" ]; then
     echo ""
-    echo "更新包不存在"
+    warning "更新包不存在"
     pause "按任意键返回"
     return
   fi
@@ -425,7 +431,7 @@ function install_ota()
   if [[ $? != 2 ]]; then
     echo "更新成功"
   else
-    echo "更新失败，请重新尝试"
+    warning "更新失败，请重新尝试"
   fi
   pause "按任意键返回"
   return
@@ -437,7 +443,7 @@ function install_apk()
   echo "请稍后……"
   adb_state
   if [[ $? != 1 ]]; then
-    echo "未破解或未连接"
+    warning "未破解或未连接"
     pause "按任意键返回"
     return
   fi
@@ -500,7 +506,7 @@ function install_root()
   echo "阅读器上选择：更新二进制文件-->常规方式-->重启"
   sleep 3
   echo ""
-  echo "重启后请检测root是否成功"
+  echo "重启后请打开 SuperSU 检测root是否成功"
   pause "按任意键返回"
   return
 }
@@ -511,7 +517,7 @@ function shortcut()
   echo "请稍后……"
   adb_state
   if [[ $? != 1 ]]; then
-    echo "未破解或未连接"
+    warning "未破解或未连接"
     pause "按任意键返回"
     return
   fi
