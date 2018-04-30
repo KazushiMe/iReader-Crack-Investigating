@@ -1,7 +1,7 @@
 #!/bin/bash
 
-version="r21"
-update="r21 高亮注意事项，修复自动版识别bug\nr20 优化破解逻辑\nr19 修复WSL相关问题"
+version="r22"
+update="r22 修复程序更新问题，优化破解\nr21 高亮注意事项，修复自动版识别bug\nr20 优化破解逻辑\nr19 修复WSL相关问题"
 
 home=$(cd `dirname $0`; pwd)
 chmod -R 777 $home
@@ -82,11 +82,11 @@ function init()
     log "IS WSL Subsystem"
     echo "检测到使用 Windows 10 Linux 子系统"
     warning "请安装 Windows 的 adb 驱动，打开对应版本的 adb 程序"
-    warning "所需adb版本: " `adb version | head -1`
-    warning "Windows中命令行操作如下:"
+    echo "所需adb版本: " `adb version | head -1`
+    echo "Windows中命令行操作如下:"
     echo "adb kill-server"
     echo "adb start-server"
-    warning "完成后不要关闭Windows的adb"
+    echo "完成后不要关闭Windows的adb"
     pause
   else
     echo "初始化adb……"
@@ -103,7 +103,17 @@ function init()
     echo_dir=$data_dir
   fi
 
-  sleep 3
+  sleep 1
+  
+  if [[ $WSL ]]; then
+    adb_error=`adb get-state 2>&1 > /dev/null` # 2>&1 stderr过滤器
+    if [[ $adb_error ]]; then
+      warning "请检查 WSL 子系统 与 Windows 的 adb 连接问题"
+      echo "程序检测到错误，即将退出……"
+      sleep 5
+      exit
+    fi
+  fi
 }
 
 function adb_state()
@@ -141,8 +151,8 @@ function enable_adb()
   start=`date +%s`
   while true
   do
-    adb shell "echo 'mtp,adb' > /data/property/persist.sys.usb.config"
-    adb shell "echo '1' > /data/property/persist.service.adb.enable"
+    adb shell "echo 'mtp,adb' > /data/property/persist.sys.usb.config" 2>&1 > /dev/null
+    adb shell "echo '1' > /data/property/persist.service.adb.enable" 2>&1 > /dev/null
     dif=`expr $(date +%s) - "$start"`
     if [ "$dif" -gt "60" ]; then
       break
@@ -177,6 +187,8 @@ function update()
   echo ""
   echo "正在检测更新……"
   cd $home
+  git fetch --all
+  git reset --hard origin/master
   git pull
   echo ""
   echo "更新完成"
@@ -198,7 +210,6 @@ function main()
   elif [[ $? == 2 ]]; then
     echo "          已进入 Recovery 模式"
   fi
-  [[ $WSL ]] && warning "若此处出现 error 提示则adb服务启动失败，请进行检查"
   echo ""
   echo "            1. 运行破解主程序（自动版）"
   echo ""
@@ -231,7 +242,7 @@ function crack()
   stage "1" "使用前须知"
   
   warning "注意事项:"
-  warning "1. 请确保安装好相关组件，包括adb及adb驱动"
+  echo "1. 请确保安装好相关组件，包括adb及adb驱动"
   echo "2. 请严格按照程序提示操作，否则有可能变砖"
   echo "3. 操作前备份好用户数据(电纸书)"
   echo ""
@@ -267,11 +278,12 @@ function crack()
   log "Waiting for Reboot"
   
   stage "4" "执行破解"
-  echo "预计需要1分钟，请耐心等待"
   echo ""
   echo "如果此步骤失败，请重新破解，在该步骤阅读器闪屏且出现 iReader 标识时立即重新插入数据线并回车"
   echo ""
-  pause "显示进度条时按任意键继续，出现 error: device not found 消息请无视"
+  pause "显示进度条时按任意键继续"
+  echo ""
+  echo "预计需要1分钟，请耐心等待……"
   
   enable_adb
   
@@ -303,7 +315,7 @@ function crack_auto()
   stage "1" "使用前须知"
   
   warning "注意事项:"
-  warning "1. 请确保安装好相关组件，包括adb及adb驱动"
+  echo "1. 请确保安装好相关组件，包括adb及adb驱动"
   echo "2. 请严格按照程序提示操作，否则有可能变砖"
   echo "3. 操作前备份好用户数据(电纸书)"
   echo ""
@@ -535,6 +547,7 @@ function shortcut()
 
 clear
 echo "iReader-Crack工具箱"
+[[ $logging == 1 ]] && warning "debug 模式"
 echo "Credit: Kazushi"
 echo "本作品采用知识共享署名-非商业性使用-禁止演绎 3.0 中国大陆许可协议进行许可。"
 echo "该工具箱完全免费，请在协议允许的范围内进行使用"
@@ -546,7 +559,7 @@ if [ ! -f "$home/updated" ]; then
   echo -e "$update"
   echo "" > "$home/updated"
 fi
-sleep 2
+sleep 3
 echo ""
 pause "按任意键启动工具箱"
 clear
