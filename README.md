@@ -96,3 +96,12 @@ iReader官方请的工程师，连Recovery的adb都忘关了……
 微信扫描：
 
 ![iReader-Crack 捐赠](https://www.einkfans.com/upload/attach/201804/123_Y8UU2HF3MAJUKU8.jpg)
+
+## 鸣谢
+
+之前所有参与过内测、提供建议的朋友
+
+
+| 捐赠时间 | 留言 | 金额 | 
+| - | :-: | -: | 
+| 2018/04/24 14:43 | 无 | ￥10.00
