@@ -36,17 +36,25 @@ git clone https://github.com/KazushiMe/iReader-Crack.git
 
 2. 按程序提示操作
 
-3. 完成后可以……
-
-安装程序、设置主屏幕
-
-开启root后[安装Xposed框架](https://www.einkfans.com/thread-51.htm)
-
 *若出现无法更新的情况请删除程序重新加载*
 
 ```
 rm -rf ./iReader-Crack
 ```
+
+
+### 破解后的操作
+
+1.  安装程序、设置主屏幕
+
+    启动器推荐: [E-Ink Launcher](https://www.coolapk.com/apk/cn.modificator.launcher)
+    
+    使用方法: 安装 → 打开设置 → 主屏幕 → 选定E-Ink Launcher
+    
+    如对 root 无要求的用户可以使用 [EasyTouch](https://www.coolapk.com/apk/com.shere.easytouch) 进行模拟键操作
+
+2.  开启root后可[安装Xposed框架](https://www.einkfans.com/thread-51.htm)，并可使用自定义化程度更高的 Xposed Edge Pro
+
 
 ### 更新或恢复
 
@@ -87,7 +95,7 @@ iReader官方请的工程师，连Recovery的adb都忘关了……
 
 新品T6还是没改……
 
-清空数据进入Recovery➡加入adb（改build.prop）➡强制开启adb（否则会被阅读器主程序关闭）
+清空数据进入Recovery → 加入adb（改build.prop） → 强制开启adb（否则会被阅读器主程序关闭）
 
 ## 捐赠
 
