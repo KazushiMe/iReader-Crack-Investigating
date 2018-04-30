@@ -1,7 +1,7 @@
 #!/bin/bash
 
-version="r22"
-update="r22 修复程序更新问题，优化破解\nr21 高亮注意事项，修复自动版识别bug\nr20 优化破解逻辑\nr19 修复WSL相关问题"
+version="r23"
+update="r23 修复apk识别和程序输出问题\nr22 修复程序更新问题，优化破解\nr21 高亮注意事项，修复自动版识别bug\nr20 优化破解逻辑\nr19 修复WSL相关问题"
 
 home=$(cd `dirname $0`; pwd)
 chmod -R 777 $home
@@ -465,7 +465,8 @@ function install_apk()
   echo "将需要安装的apk文件放入 $echo_dir 文件夹中"
   echo "建议使用英文命名"
   pause "按任意键开始安装"
-  if [ ! -f "$data_dir/*.apk" ]; then
+  list_apk=`ls "$data_dir" 2> /dev/null`
+  if [[ ! $list_apk ]]; then
     echo ""
     echo "没有找到apk"
     pause "按任意键返回"
