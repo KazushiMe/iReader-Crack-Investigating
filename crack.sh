@@ -78,7 +78,6 @@ function init()
   
   WSL=$(echo `uname -a` | grep -o "Microsoft" | wc -l)
   if [ $WSL -ge "1" ]; then
-    WSL=true
     log "IS WSL Subsystem"
     echo "检测到使用 Windows 10 Linux 子系统"
     warning "请安装 Windows 的 adb 驱动，打开对应版本的 adb 程序"
@@ -95,7 +94,7 @@ function init()
   fi
   adb start-server
   
-  if [ $WSL ]; then
+  if [ $WSL -ge "1" ]; then
     data_dir="/mnt/d/iReader-Crack"
     echo_dir="Windows 系统 D:\\iReader-Crack\\"
   else
@@ -105,9 +104,9 @@ function init()
 
   sleep 1
   
-  if [[ $WSL ]]; then
+  if [ $WSL -ge "1" ]; then
     adb_error=`adb get-state 2>&1 > /dev/null` # 2>&1 stderr过滤器
-    if [[ $adb_error ]]; then
+    if [ $adb_error ]; then
       warning "请检查 WSL 子系统 与 Windows 的 adb 连接问题"
       echo "程序检测到错误，即将退出……"
       sleep 5
