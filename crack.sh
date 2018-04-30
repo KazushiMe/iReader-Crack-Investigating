@@ -106,7 +106,7 @@ function init()
   
   if [ $WSL -ge "1" ]; then
     adb_error=`adb get-state 2>&1 > /dev/null` # 2>&1 stderr过滤器
-    if [ $adb_error ]; then
+    if [[ $adb_error ]]; then
       warning "请检查 WSL 子系统 与 Windows 的 adb 连接问题"
       echo "程序检测到错误，即将退出……"
       sleep 5
@@ -118,7 +118,7 @@ function init()
 function adb_state()
 {
   # unknown:0 device:1 recovery:2
-  state=`adb get-state`
+  state=`adb get-state 2> /dev/null`
   if [[ $state == "device" ]]; then
     return 1
   elif [[ $state == "recovery" ]]; then
@@ -150,8 +150,8 @@ function enable_adb()
   start=`date +%s`
   while true
   do
-    adb shell "echo 'mtp,adb' > /data/property/persist.sys.usb.config" 2>&1 > /dev/null
-    adb shell "echo '1' > /data/property/persist.service.adb.enable" 2>&1 > /dev/null
+    adb shell "echo 'mtp,adb' > /data/property/persist.sys.usb.config" 2> /dev/null
+    adb shell "echo '1' > /data/property/persist.service.adb.enable" 2> /dev/null
     dif=`expr $(date +%s) - "$start"`
     if [ "$dif" -gt "60" ]; then
       break
