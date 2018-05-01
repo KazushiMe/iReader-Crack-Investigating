@@ -549,7 +549,7 @@ clear
 echo "iReader-Crack工具箱"
 [[ $logging == 1 ]] && warning "debug 模式"
 echo "Credit: Kazushi"
-echo "本作品采用知识共享署名-非商业性使用-禁止演绎 3.0 中国大陆许可协议进行许可。"
+echo "本作品采用知识共享署名-非商业性使用-相同方式共享 3.0 中国大陆许可协议进行许可。"
 echo "该工具箱完全免费，请在协议允许的范围内进行使用"
 echo ""
 echo "详细使用方法请访问: https://github.com/KazushiMe/iReader-Crack/"

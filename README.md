@@ -16,7 +16,7 @@ macOS 系统及部分虚拟机暂不兼容，部分 Windows 版本可能无法�
 
 ## 协议
 
-<a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/3.0/cn/"><img alt="知识共享许可协议" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-nd/3.0/cn/88x31.png" /></a><br />本作品采用<a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/3.0/cn/">知识共享署名-非商业性使用-禁止演绎 3.0 中国大陆许可协议</a>进行许可。
+<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/cn/"><img alt="知识共享许可协议" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/3.0/cn/88x31.png" /></a><br />本作品采用<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/cn/">知识共享署名-非商业性使用-相同方式共享 3.0 中国大陆许可协议</a>进行许可。
 
 ## 使用方法
 
@@ -110,6 +110,8 @@ iReader官方请的工程师，连Recovery的adb都忘关了……
 之前所有参与过内测、提供建议的朋友
 
 
-| 捐赠时间 | 留言 | 金额 | 
+| 捐赠时间 | 签名 | 金额 | 
 | - | :-: | -: | 
-| 2018/04/24 14:43 | 无 | ￥10.00
+| 2018/04/24 14:43 | 无 | ￥10.00 |
+| 2018/05/01 11:26 | 论坛：我是小白鼠呀群qq761386865感谢群主的辛苦 | ￥5.00 |
+| 2018/05/01 11:30 | 雷锋 继续加油！！！ | ￥10.00 |
