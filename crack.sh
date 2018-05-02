@@ -22,7 +22,7 @@ function pause()
 
 function warning()
 {
-  echo -e "\033[31;5m$*\033[0m"
+  echo -e "\033[41;37m$*\033[0m"
 }
 
 function log()

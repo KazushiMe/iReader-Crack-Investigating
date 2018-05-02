@@ -2,17 +2,41 @@
 
 # iReader-Crack 工具箱
 
+### 导航
+
+* [协议](#协议)
+
+* [使用方法](#使用方法)
+
+  * [首次加载](#首次加载)
+  
+  * [运行](#运行)
+  
+  * [破解后的操作](#破解后的操作)
+  
+  * [更新或恢复](#更新或恢复)
+  
+  * [视频教程](#视频教程)
+  
+* [WSL环境配置](#WSL环境配置)
+
+* [原理](#原理)
+
+* [捐赠](#捐赠)
+
+* [鸣谢](#鸣谢)
+
 iReader Plus、Light、Ocean 与 T6 阅读器破解，支持最新系统（截至4月底）
 
-Plus建议降级以使用蓝牙听书功能：[教程](https://www.einkfans.com/thread-60.htm)
+Plus 新系统版本需降级以使用蓝牙听书功能：[教程](https://www.einkfans.com/thread-60.htm)
+
+Plus 与 0027 及之前版本的 Light 建议使用 [iReaderHelper](https://www.ireaderfans.com/jiaocheng) 工具
 
 目前支持 Linux 系统进行破解，推荐 Ubuntu，支持 Windows 10 Linux 子系统
 
 macOS 系统及部分虚拟机暂不兼容，部分 Windows 版本可能无法正常使用 WSL
 
 欢迎加入 QQ 群组了解详情，群号码：120581715，验证消息：ireaderFans
-
-近期将上线 FAQ 常见问题解答
 
 ## 协议
 
@@ -21,6 +45,8 @@ macOS 系统及部分虚拟机暂不兼容，部分 Windows 版本可能无法�
 ## 使用方法
 
 ### 首次加载
+
+如果使用 Windows 环境请先执行 [相关操作](#WSL环境配置)
 
 ```
 git clone https://github.com/KazushiMe/iReader-Crack.git
@@ -89,6 +115,20 @@ adb pull /sdcard/adupsfota/update.zip ~
 
 Windows 10 版请等待更新
 
+## WSL环境配置
+
+1. 确保使用 1709 及以上版本系统
+
+2. 如图所示进行配置
+
+![WSL1](https://raw.githubusercontent.com/KazushiMe/iReader-Crack/master/pic/WSL1.png)
+
+3. 安装好 Windows 的 adb 驱动及程序包
+
+4. 先打开 Windows 的 adb server，再打开 WSL，运行工具箱
+
+![WSL2]](https://raw.githubusercontent.com/KazushiMe/iReader-Crack/master/pic/WSL2.png)
+
 ## 原理
 
 iReader官方请的工程师，连Recovery的adb都忘关了……
@@ -99,16 +139,15 @@ iReader官方请的工程师，连Recovery的adb都忘关了……
 
 ## 捐赠
 
-#### 如果觉得我的作品对您有帮助，可以请我喝一杯咖啡。
+*如果觉得我的作品对您有帮助，可以请我喝一杯咖啡。*
 
 微信扫描：
 
-![iReader-Crack 捐赠](https://www.einkfans.com/upload/attach/201804/123_Y8UU2HF3MAJUKU8.jpg)
+![iReader-Crack 捐赠](https://kazushime.github.io/file/pic/WeChat_Donate.jpg)
 
 ## 鸣谢
 
 之前所有参与过内测、提供建议的朋友
-
 
 | 捐赠时间 | 签名 | 金额 | 
 | - | :-: | -: | 
