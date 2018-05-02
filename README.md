@@ -18,7 +18,7 @@
   
   * [视频教程](#视频教程)
   
-* [WSL环境配置](#WSL环境配置)
+* [WSL环境配置](#wsl环境配置)
 
 * [原理](#原理)
 
@@ -46,7 +46,7 @@ macOS 系统及部分虚拟机暂不兼容，部分 Windows 版本可能无法�
 
 ### 首次加载
 
-如果使用 Windows 环境请先执行 [相关操作](#WSL环境配置)
+如果使用 Windows 环境请先执行 [相关操作](#wsl环境配置)
 
 ```
 git clone https://github.com/KazushiMe/iReader-Crack.git
@@ -127,7 +127,7 @@ Windows 10 版请等待更新
 
 4. 先打开 Windows 的 adb server，再打开 WSL，运行工具箱
 
-![WSL2]](https://raw.githubusercontent.com/KazushiMe/iReader-Crack/master/pic/WSL2.png)
+![WSL2](https://raw.githubusercontent.com/KazushiMe/iReader-Crack/master/pic/WSL2.png)
 
 ## 原理
 

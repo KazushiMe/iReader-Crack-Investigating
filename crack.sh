@@ -166,9 +166,6 @@ function enable_adb_2()
   times=1
   while true
   do
-    log "Loop Count: $times"
-    adb shell "echo 'mtp,adb' > /data/property/persist.sys.usb.config"
-    adb shell "echo '1' > /data/property/persist.service.adb.enable"
     adb_state
     if [[ $? == 0 ]]; then
       log "Connection Closed"
@@ -176,6 +173,9 @@ function enable_adb_2()
     else
       log "Device State: $?"
     fi
+    log "Loop Count: $times"
+    adb shell "echo 'mtp,adb' > /data/property/persist.sys.usb.config"
+    adb shell "echo '1' > /data/property/persist.service.adb.enable"
     times=`expr $times + 1`
   done
   #主程序会关闭adb，不得不循环破解
