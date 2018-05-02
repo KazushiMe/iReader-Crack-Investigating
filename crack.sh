@@ -95,8 +95,8 @@ function init()
   adb start-server
   
   if [ $WSL -ge "1" ]; then
-    data_dir="/mnt/d/iReader-Crack"
-    echo_dir="Windows 系统 D:\\iReader-Crack\\"
+    data_dir="/mnt/c/iReader-Crack"
+    echo_dir="Windows 系统 C:\\iReader-Crack\\"
   else
     data_dir="$home/data"
     echo_dir=$data_dir
