@@ -1,4 +1,4 @@
-#!/bin/bash
+!/bin/bash
 
 version="r24"
 update="r24 增加自动破解方案，以修复部分Linux Distro adb的兼容性问题\nr23 修复apk识别和程序输出问题\nr22 修复程序更新问题，优化破解\nr21 高亮注意事项，修复自动版识别bug\nr20 优化破解逻辑"
@@ -541,15 +541,15 @@ function install_root()
   fi
   echo ""
   echo "正在执行root……"
-  adb shell "mount -o rw,remount /system"
-  adb push "$home/crack/bin/su" "/system/xbin"
-  adb push "$home/crack/bin/su" "/system/bin"
-  adb push "$data_dir/Superuser.apk" "/system/app/"
-  adb shell "chown 0.0 /system/xbin/su"
-  adb shell "chmod 6755 /system/xbin/su"
-  adb shell "chown 0.0 /system/bin/su"
-  adb shell "chmod 6755 /system/bin/su"
-  adb shell "su -d am start -a android.intent.action.MAIN -n eu.chainfire.supersu/.MainActivity"
+  adb shell "mount -o rw,remount /system"
+  adb push "$home/crack/bin/su" "/system/xbin"
+  adb push "$home/crack/bin/su" "/system/bin"
+  adb push "$data_dir/Superuser.apk" "/system/app/"
+  adb shell "chown 0.0 /system/xbin/su"
+  adb shell "chmod 6755 /system/xbin/su"
+  adb shell "chown 0.0 /system/bin/su"
+  adb shell "chmod 6755 /system/bin/su"
+  adb shell "su -d am start -a android.intent.action.MAIN -n eu.chainfire.supersu/.MainActivity"
   echo ""
   echo "阅读器上选择：更新二进制文件-->常规方式-->重启"
   sleep 3
