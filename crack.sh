@@ -1,7 +1,7 @@
 #!/bin/bash
 
-version="r23"
-update="r23 修复apk识别和程序输出问题\nr22 修复程序更新问题，优化破解\nr21 高亮注意事项，修复自动版识别bug\nr20 优化破解逻辑\nr19 修复WSL相关问题"
+version="r24"
+update="r24 增加自动破解方案，以修复部分Linux Distro adb的兼容性问题\nr23 修复apk识别和程序输出问题\nr22 修复程序更新问题，优化破解\nr21 高亮注意事项，修复自动版识别bug\nr20 优化破解逻辑"
 
 home=$(cd `dirname $0`; pwd)
 chmod -R 777 $home
@@ -116,6 +116,19 @@ function init()
 }
 
 function adb_state()
+{
+  # unknown:0 device:1 recovery:2
+  state=`adb devices 2> /dev/null`
+  if [[ $(echo "$state" | grep -o "device" | wc -l) == "2" ]]; then
+    return 1
+  elif [[ $(echo "$state" | grep "recovery") != "" ]]; then
+    return 2
+  else
+    return 0
+  fi
+}
+
+function adb_state_2()
 {
   # unknown:0 device:1 recovery:2
   state=`adb get-state 2> /dev/null`
@@ -332,6 +345,17 @@ function crack_auto()
   fi
   sleep 1
   
+  method=
+  echo ""
+  echo "1. 方案一（默认）"
+  echo "2. 方案二"
+  read -n 1 -p "请键入方案序号: " method
+  log "Method: $method"
+  if [[ $method != "1" && $method != "2" ]]; then
+    echo "输入错误，即将执行默认方案一"
+    method="1"
+  fi
+  
   stage "3" "进入Recovery"
   echo "请按如下步骤操作："
   echo "1. 将iReader用数据线连接至电脑"
@@ -342,7 +366,11 @@ function crack_auto()
   log "Checking Recovery"
   while true
   do
-    adb_state
+    if [[ $method == "2" ]]; then
+      adb_state_2
+    else
+      adb_state
+    fi
     if [[ $? == 2 ]]; then
       log "Recovery Mode"
       break
@@ -362,7 +390,11 @@ function crack_auto()
   sleep 1
   while true
   do
-    adb_state
+    if [[ $method == "2" ]]; then
+      adb_state_2
+    else
+      adb_state
+    fi
     if [[ $? == 1 ]]; then
       log "Have found adb device"
       break
@@ -377,7 +409,11 @@ function crack_auto()
   pause "重启进阅读器界面后按任意键继续"
   
   echo ""
-  adb_state
+  if [[ $method == "2" ]]; then
+      adb_state_2
+  else
+      adb_state
+  fi
   if [[ $? == 1 ]]; then
     echo "破解成功，现可以通过adb安装程序"
     log "Done"
