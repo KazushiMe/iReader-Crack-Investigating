@@ -1,7 +1,7 @@
-!/bin/bash
+#!/bin/bash
 
-version="r24"
-update="r24 增加自动破解方案，以修复部分Linux Distro adb的兼容性问题\nr23 修复apk识别和程序输出问题\nr22 修复程序更新问题，优化破解\nr21 高亮注意事项，修复自动版识别bug\nr20 优化破解逻辑"
+version="r25"
+update="r25 测试新方案，降低失败率\nr24 增加自动破解方案，以修复部分Linux Distro adb的兼容性问题\nr23 修复apk识别和程序输出问题\nr22 修复程序更新问题，优化破解\nr21 高亮注意事项，修复自动版识别bug\nr20 优化破解逻辑"
 
 home=$(cd `dirname $0`; pwd)
 chmod -R 777 $home
@@ -239,6 +239,8 @@ function main()
   echo ""
   echo "            E. 更新工具箱"
   echo ""
+  echo "            F. 新破解方案测试"
+  echo ""
   echo "            X. 退出"
   echo ""
 
@@ -414,6 +416,106 @@ function crack_auto()
   else
       adb_state
   fi
+  if [[ $? == 1 ]]; then
+    echo "破解成功，现可以通过adb安装程序"
+    log "Done"
+  else
+    warning "破解失败，请尝试重新破解或进行反馈"
+    log "Failed"
+    log `adb devices`
+  fi
+  pause "按任意键返回"
+  return
+}
+
+function crack_test()
+{
+  clear
+  
+  log "Version: "$version" Test"
+  echo "    iReader 系列 阅读器 破解 测试方案"
+  stage "1" "使用前须知"
+  
+  warning "注意事项:"
+  echo "1. 请确保安装好相关组件，包括adb及adb驱动"
+  echo "2. 请严格按照程序提示操作，否则有可能变砖"
+  echo "3. 操作前备份好用户数据(电纸书)"
+  echo ""
+  sleep 3
+  
+  stage "2" "环境检测与准备"
+  adb_state
+  if [[ $? != 0 ]]; then
+    echo ""
+    warning "已连接开启USB调试的Android设备，请移除后重试"
+    log "Already connected adb device"
+    log `adb devices`
+    pause
+    return
+  fi
+  sleep 1
+  
+  stage "3" "进入Recovery"
+  echo "请按如下步骤操作："
+  echo "1. 将iReader用数据线连接至电脑"
+  echo "2. 阅读器上 选择 设置-->关于本机-->恢复出厂设置"
+  echo "3. 等待出现机器人标识"
+  echo ""
+  echo "正在检测是否进入Recovery……"
+  log "Checking Recovery"
+  while true
+  do
+    adb_state
+    if [[ $? == 2 ]]; then
+      log "Recovery Mode"
+      break
+    fi
+  done
+  
+  echo ""
+  echo "正在复制破解文件……"
+  
+  log "Copying Recovery Shell Files"
+  adb push $home/crack/bin /system/bin/
+  adb push $home/crack/lib /system/lib/
+  
+  adb shell "/system/bin/mount -t ext4 /dev/block/mmcblk0p6 /cache"
+  log "Mount /cache Done"
+  
+  adb shell "rm -rf /cache/recovery/command"
+  adb reboot recovery
+  
+  echo "等待重启……"
+  log "Waiting for Reboot"
+  sleep 5
+  while true
+  do
+    adb_state
+    if [[ $? == 2 ]]; then
+      log "Recovery Mode"
+      break
+    fi
+  done
+  
+  stage "4" "进行破解"
+  
+  recovery
+  adb shell "echo 'mtp,adb' > /data/property/persist.sys.usb.config"
+  adb shell "echo '1' > /data/property/persist.service.adb.enable"
+  adb shell "chmod -R 444 /data/property/persist.sys.usb.config"
+  adb shell "chmod -R 444 /data/property/persist.service.adb.enable"
+  adb reboot
+  
+  echo "等待重启……"
+  log "Waiting for Reboot"
+  
+  echo ""
+  warning "请手动重启阅读器，可能需要重新插入数据线"
+  log "Waiting for Reboot Manually"
+  pause "重启进阅读器界面后按任意键继续"
+  
+  echo ""
+  adb_state
   if [[ $? == 1 ]]; then
     echo "破解成功，现可以通过adb安装程序"
     log "Done"
@@ -614,6 +716,7 @@ do
     c|C)    shortcut "home";;
     D|d)    $home/crack.sh -debug; exit;;
     E|e)    update;;
+    F|f)    crack_test;;
     X|x)    clear; exit;;
     *)
     echo ""
