@@ -157,6 +157,11 @@ function recovery()
   log "Build.prop Modified Successfully"
 }
 
+function bin2()
+{
+  adb push $home/crack/bin2 /system/bin/
+}
+
 function enable_adb()
 {
   log "Enabling Adb During Booting"
@@ -500,6 +505,7 @@ function crack_test()
   stage "4" "进行破解"
   
   recovery
+  bin2
   adb shell "echo 'mtp,adb' > /data/property/persist.sys.usb.config"
   adb shell "echo '1' > /data/property/persist.service.adb.enable"
   adb shell "chmod -R 444 /data/property/persist.sys.usb.config"
@@ -568,6 +574,7 @@ function install_ota()
     done
   fi
   recovery
+  bin2
   adb shell "/system/bin/mount -t ext4 /dev/block/mmcblk0p6 /cache"
   echo ""
   echo "正在复制OTA更新包"
@@ -644,8 +651,8 @@ function install_root()
   echo ""
   echo "正在执行root……"
   adb shell "mount -o rw,remount /system"
-  adb push "$home/crack/bin/su" "/system/xbin"
-  adb push "$home/crack/bin/su" "/system/bin"
+  adb push "$home/crack/bin2/su" "/system/xbin"
+  adb push "$home/crack/bin2/su" "/system/bin"
   adb push "$data_dir/Superuser.apk" "/system/app/"
   adb shell "chown 0.0 /system/xbin/su"
   adb shell "chmod 6755 /system/xbin/su"
