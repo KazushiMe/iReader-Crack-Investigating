@@ -87,7 +87,6 @@ function init()
     echo "adb start-server"
     echo "完成后不要关闭Windows的adb"
     pause
-    adb kill-server
     adb start-server
     
     data_dir="/mnt/c/iReader-Crack"
