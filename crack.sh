@@ -1,7 +1,7 @@
 #!/bin/bash
 
-version="r25"
-update="r25 测试新方案，降低失败率\nr24 增加自动破解方案，以修复部分Linux Distro adb的兼容性问题\nr23 修复apk识别和程序输出问题\nr22 修复程序更新问题，优化破解\nr21 高亮注意事项，修复自动版识别bug\nr20 优化破解逻辑"
+version="r26"
+update="r26 修复新方案(可能仍有问题)，增加彩蛋(6)\nr25 测试新方案，降低失败率\nr24 增加自动破解方案，以修复部分Linux Distro adb的兼容性问题\nr23 修复apk识别和程序输出问题\nr22 修复程序更新问题，优化破解\nr21 高亮注意事项，修复自动版识别bug\nr20 优化破解逻辑"
 
 home=$(cd `dirname $0`; pwd)
 chmod -R 777 $home
@@ -43,7 +43,7 @@ function stage()
 {
   echo ""
   echo "第 $1 阶段: $2"
-  log "========== Stage $1 : $2 =========="
+  log "========== 阶段 $1 : $2 =========="
 }
 
 function init()
@@ -53,15 +53,15 @@ function init()
   adb_exec=`which adb`
   if [[ ${issue:0:6} != "Ubuntu" ]]; then
     warning "当前使用的系统不是Ubuntu，可能不受支持"
-    log "Not Ubuntu"
+    log "当前使用的系统不是Ubuntu"
     pause
   fi
   if [[ ${adb_exec:0:1} != "/" ]]; then
     warning "未检测到adb程序"
-    log "adb Not Found"
+    log "未检测到adb程序"
     if [[ ${issue:0:6} == "Ubuntu" ]]; then
       pause "按任意键执行安装，可能需要输入密码"
-      log "adb Installing"
+      log "正在安装adb程序"
       sudo apt-get update
       sudo apt-get install adb
       init
@@ -69,7 +69,7 @@ function init()
     else
       warning "请安装adb后再执行本程序"
       pause "按任意键退出"
-      log "Need adb, exit"
+      log "未安装，退出"
       exit
     fi
   fi
@@ -78,7 +78,7 @@ function init()
   
   WSL=$(echo `uname -a` | grep -o "Microsoft" | wc -l)
   if [ $WSL -ge "1" ]; then
-    log "IS WSL Subsystem"
+    log "使用WSL子系统"
     echo "检测到使用 Windows 10 Linux 子系统"
     warning "请安装 Windows 的 adb 驱动，打开对应版本的 adb 程序"
     echo "所需adb版本: " `adb version | head -1`
@@ -87,31 +87,30 @@ function init()
     echo "adb start-server"
     echo "完成后不要关闭Windows的adb"
     pause
-  else
-    echo "初始化adb……"
-    log "Initializing adb"
     adb kill-server
-  fi
-  adb start-server
-  
-  if [ $WSL -ge "1" ]; then
+    adb start-server
+    
     data_dir="/mnt/c/iReader-Crack"
     echo_dir="Windows 系统 C:\\iReader-Crack\\"
-  else
-    data_dir="$home/data"
-    echo_dir=$data_dir
-  fi
-
-  sleep 1
-  
-  if [ $WSL -ge "1" ]; then
+    
+    echo ""
     adb_error=`adb get-state 2>&1 > /dev/null` # 2>&1 stderr过滤器
     if [[ $adb_error ]]; then
-      warning "请检查 WSL 子系统 与 Windows 的 adb 连接问题"
+      warning "请检查 WSL 子系统 与 Windows 的 adb 连接"
+      echo "可能需要将 adb 程序放入 C:\\Windows\\SysWOW64"
+      log `adb get-state`
       echo "程序检测到错误，即将退出……"
       sleep 5
       exit
     fi
+  else
+    echo "初始化adb……"
+    log "Initializing adb"
+    adb kill-server
+    adb start-server
+    
+    data_dir="$home/data"
+    echo_dir=$data_dir
   fi
 }
 
@@ -130,6 +129,7 @@ function adb_state()
 
 function adb_state_2()
 {
+  # adb 状态检测 旧版
   # unknown:0 device:1 recovery:2
   state=`adb get-state 2> /dev/null`
   if [[ $state == "device" ]]; then
@@ -143,18 +143,18 @@ function adb_state_2()
 
 function recovery()
 {
-  log "Copying Recovery Shell Files"
+  log "复制Recovery所需文件"
   adb push $home/crack/bin /system/bin/
   adb push $home/crack/lib /system/lib/
   adb shell "/system/bin/mount -t ext4 /dev/block/mmcblk0p5 /system"
-  log "Mount /system Done"
+  log "挂载 /system 成功"
   adb shell "/system/bin/echo 'persist.service.adb.enable=1' >> /system/build.prop"
   adb shell "/system/bin/echo 'persist.service.debuggable=1' >> /system/build.prop"
   adb shell "/system/bin/echo 'persist.sys.usb.config=mtp,adb' >> /system/build.prop"
   adb shell "/system/bin/echo 'ro.secure=0' >> /system/build.prop"
   adb shell "/system/bin/echo 'ro.adb.secure=0' >> /system/build.prop"
   adb shell "/system/bin/echo 'ro.debuggable=1' >> /system/build.prop"
-  log "Build.prop Modified Successfully"
+  log "修改Build.prop成功"
 }
 
 function bin2()
@@ -164,7 +164,7 @@ function bin2()
 
 function enable_adb()
 {
-  log "Enabling Adb During Booting"
+  log "启动期间强制开启adb"
   start=`date +%s`
   while true
   do
@@ -180,7 +180,7 @@ function enable_adb()
 
 function enable_adb_2()
 {
-  log "Enabling Adb During Booting - Auto Approach"
+  log "启动期间强制开启adb--自动判断"
   times=1
   while true
   do
@@ -191,7 +191,7 @@ function enable_adb_2()
     else
       log "Device State: $?"
     fi
-    log "Loop Count: $times"
+    log "循环计数: $times"
     adb shell "echo 'mtp,adb' > /data/property/persist.sys.usb.config"
     adb shell "echo '1' > /data/property/persist.service.adb.enable"
     times=`expr $times + 1`
@@ -267,14 +267,14 @@ function crack()
   echo ""
   sleep 1
   pause
-  log "Agreed"
+  log "已同意"
   
   stage "2" "环境检测与准备"
   adb_state
   if [[ $? != 0 ]]; then
     echo ""
     warning "已连接开启USB调试的Android设备，请移除后重试"
-    log "Already connected adb device"
+    log "已连接USB调试"
     log `adb devices`
     pause
     crack
@@ -294,7 +294,7 @@ function crack()
   recovery
   
   echo "等待重启……"
-  log "Waiting for Reboot"
+  log "等待重启"
   
   stage "4" "执行破解"
   echo ""
@@ -308,17 +308,17 @@ function crack()
   
   echo ""
   echo "请手动重启阅读器"
-  log "Waiting for Reboot Manually..."
+  log "等待手动重启"
   pause "重启进阅读器界面后按任意键继续"
   
   echo ""
   adb_state
   if [[ $? == 1 ]]; then
     echo "破解成功，现可以通过adb安装程序"
-    log "Crack Done!"
+    log "破解成功!"
   else
     warning "破解失败，请尝试重新破解或进行反馈"
-    log "Crack Failed!"
+    log "破解失败!"
     log `adb devices`
   fi
   pause "按任意键返回"
@@ -345,7 +345,7 @@ function crack_auto()
   if [[ $? != 0 ]]; then
     echo ""
     warning "已连接开启USB调试的Android设备，请移除后重试"
-    log "Already connected adb device"
+    log "已连接USB调试"
     log `adb devices`
     pause
     return
@@ -370,7 +370,7 @@ function crack_auto()
   echo "3. 等待出现机器人标识"
   echo ""
   echo "正在检测是否进入Recovery……"
-  log "Checking Recovery"
+  log "检测进入Recovery"
   while true
   do
     if [[ $method == "2" ]]; then
@@ -379,7 +379,7 @@ function crack_auto()
       adb_state
     fi
     if [[ $? == 2 ]]; then
-      log "Recovery Mode"
+      log "已进入Recovery"
       break
     fi
   done
@@ -389,7 +389,7 @@ function crack_auto()
   recovery
   
   echo "等待重启……"
-  log "Waiting for Reboot"
+  log "等待重启"
   
   stage "4" "执行破解"
   echo "等待系统重载……"
@@ -403,7 +403,7 @@ function crack_auto()
       adb_state
     fi
     if [[ $? == 1 ]]; then
-      log "Have found adb device"
+      log "已连接上adb"
       break
     fi
   done
@@ -412,7 +412,7 @@ function crack_auto()
   
   echo ""
   warning "请手动重启阅读器，可能需要重新插入数据线"
-  log "Waiting for Reboot Manually"
+  log "等待手动重启"
   pause "重启进阅读器界面后按任意键继续"
   
   echo ""
@@ -423,10 +423,10 @@ function crack_auto()
   fi
   if [[ $? == 1 ]]; then
     echo "破解成功，现可以通过adb安装程序"
-    log "Done"
+    log "破解成功"
   else
     warning "破解失败，请尝试重新破解或进行反馈"
-    log "Failed"
+    log "破解失败"
     log `adb devices`
   fi
   pause "按任意键返回"
@@ -456,7 +456,7 @@ function crack_test()
   if [[ $? != 0 ]]; then
     echo ""
     warning "已连接开启USB调试的Android设备，请移除后重试"
-    log "Already connected adb device"
+    log "已连接USB调试"
     log `adb devices`
     pause
     return
@@ -470,45 +470,55 @@ function crack_test()
   echo "3. 等待出现机器人标识"
   echo ""
   echo "正在检测是否进入Recovery……"
-  log "Checking Recovery"
+  log "检测进入Recovery"
   while true
   do
     adb_state
     if [[ $? == 2 ]]; then
-      log "Recovery Mode"
+      log "已进入Recovery"
       break
     fi
   done
   
   echo ""
   echo "正在复制破解文件……"
+  recovery
   
-  log "Copying Recovery Shell Files"
-  adb push $home/crack/bin /system/bin/
-  adb push $home/crack/lib /system/lib/
-  
-  adb shell "/system/bin/mount -t ext4 /dev/block/mmcblk0p6 /cache"
-  log "Mount /cache Done"
-  
-  adb shell "/system/bin/rm -rf /cache/recovery/command"
-  adb reboot recovery
-  
-  echo "等待重启……"
-  log "Waiting for Reboot"
-  sleep 5
+  echo ""
+  echo "等待系统重载……"
+  echo "如果长时间停在此步骤，请重新破解，并在该步骤阅读器闪屏且出现 iReader 标识时立即重新插入数据线"
+  sleep 1
   while true
   do
     adb_state
-    if [[ $? == 2 ]]; then
-      log "Recovery Mode"
+    if [[ $? == 1 ]]; then
+      log "已连接adb"
       break
     fi
   done
   
   stage "4" "进行破解"
   
-  recovery
-  bin2
+  echo "正在重新进入 Recovery"
+  adb reboot recovery
+  sleep 3
+  while true
+  do
+    adb_state
+    if [[ $? == 2 ]]; then
+      log "已进入Recovery"
+      break
+    fi
+  done
+  
+  echo ""
+  echo "正在执行破解……"
+  
+  log "复制Recovery所需文件"
+  adb push $home/crack/bin /system/bin/
+  adb push $home/crack/bin2 /system/bin/
+  adb push $home/crack/lib /system/lib/
+  
   adb shell "/system/bin/mount -t ext4 /dev/block/mmcblk0p4 /data"
   adb shell "/system/bin/echo 'mtp,adb' > /data/property/persist.sys.usb.config"
   adb shell "/system/bin/echo '1' > /data/property/persist.service.adb.enable"
@@ -517,21 +527,21 @@ function crack_test()
   adb reboot
   
   echo "等待重启……"
-  log "Waiting for Reboot"
+  log "等待重启"
+  
+  sleep 20
   
   echo ""
-  warning "请手动重启阅读器，可能需要重新插入数据线"
-  log "Waiting for Reboot Manually"
-  pause "重启进阅读器界面后按任意键继续"
+  pause "等待进入阅读器界面后按任意键继续"
   
   echo ""
   adb_state
   if [[ $? == 1 ]]; then
     echo "破解成功，现可以通过adb安装程序"
-    log "Done"
+    log "破解成功"
   else
     warning "破解失败，请尝试重新破解或进行反馈"
-    log "Failed"
+    log "破解失败"
     log `adb devices`
   fi
   pause "按任意键返回"
@@ -614,7 +624,7 @@ function install_apk()
   echo "将需要安装的apk文件放入 $echo_dir 文件夹中"
   echo "建议使用英文命名"
   pause "按任意键开始安装"
-  list_apk=`ls "$data_dir" 2> /dev/null`
+  list_apk=`ls "$data_dir/*.apk" 2> /dev/null`
   if [[ ! $list_apk ]]; then
     echo ""
     echo "没有找到apk"
@@ -694,6 +704,62 @@ function shortcut()
   return
 }
 
+function boom()
+{
+  clear
+  
+  log "Version: "$version
+  echo "      iReader 系列 阅读器"
+  echo "                          变砖"
+  stage "6" "666"
+  
+  warning "注意事项:"
+  echo "1. 请确保安装好相关组件，包括adb及adb驱动"
+  echo "2. 请严格按照程序提示操作，否则有可能无法变砖"
+  
+  warning "谨慎使用"
+  echo ""
+  sleep 3
+  
+  pause
+  
+  stage "6" "666666"
+  
+  echo "请按如下步骤操作："
+  echo "1. 将iReader用数据线连接至电脑"
+  echo "2. 阅读器上 选择 设置-->关于本机-->恢复出厂设置"
+  echo "3. 等待出现机器人标识"
+  echo ""
+  echo "正在检测是否进入Recovery……"
+  log "检测进入Recovery"
+  while true
+  do
+    adb_state
+    if [[ $? == 2 ]]; then
+      log "已进入Recovery"
+      break
+    fi
+  done
+  
+  echo ""
+  echo "正在复制破解文件……"
+  recovery
+  adb shell "/system/bin/rm -rf /system/build.prop"
+  
+  stage "6" "666666666"
+  
+  echo ""
+  echo "等待阅读器重启变砖……"
+  echo ""
+  sleep 5
+  clear
+  rm -rf "$home"
+  echo ""
+  echo "现在您可以反馈给售后要求 换货 或 退货"
+  echo "感谢您的使用，再见"
+  exit
+}
+
 clear
 echo "iReader-Crack工具箱"
 [[ $logging == 1 ]] && warning "debug 模式"
@@ -722,6 +788,7 @@ do
     3)      install_ota;;
     4)      install_apk;;
     5)      install_root;;
+    6)      boom;;
     a|A)    shortcut "setting";;
     b|B)    shortcut "back";;
     c|C)    shortcut "home";;
