@@ -148,12 +148,12 @@ function recovery()
   adb push $home/crack/lib /system/lib/
   adb shell "/system/bin/mount -t ext4 /dev/block/mmcblk0p5 /system"
   log "Mount /system Done"
-  adb shell "echo 'persist.service.adb.enable=1' >> /system/build.prop"
-  adb shell "echo 'persist.service.debuggable=1' >> /system/build.prop"
-  adb shell "echo 'persist.sys.usb.config=mtp,adb' >> /system/build.prop"
-  adb shell "echo 'ro.secure=0' >> /system/build.prop"
-  adb shell "echo 'ro.adb.secure=0' >> /system/build.prop"
-  adb shell "echo 'ro.debuggable=1' >> /system/build.prop"
+  adb shell "/system/bin/echo 'persist.service.adb.enable=1' >> /system/build.prop"
+  adb shell "/system/bin/echo 'persist.service.debuggable=1' >> /system/build.prop"
+  adb shell "/system/bin/echo 'persist.sys.usb.config=mtp,adb' >> /system/build.prop"
+  adb shell "/system/bin/echo 'ro.secure=0' >> /system/build.prop"
+  adb shell "/system/bin/echo 'ro.adb.secure=0' >> /system/build.prop"
+  adb shell "/system/bin/echo 'ro.debuggable=1' >> /system/build.prop"
   log "Build.prop Modified Successfully"
 }
 
@@ -244,7 +244,7 @@ function main()
   echo ""
   echo "            E. 更新工具箱"
   echo ""
-  echo "            F. 新破解方案测试"
+  echo "            F. 新破解方案测试（谨慎使用，可能变砖）"
   echo ""
   echo "            X. 退出"
   echo ""
@@ -445,8 +445,11 @@ function crack_test()
   echo "1. 请确保安装好相关组件，包括adb及adb驱动"
   echo "2. 请严格按照程序提示操作，否则有可能变砖"
   echo "3. 操作前备份好用户数据(电纸书)"
+  warning "谨慎使用，仅供测试"
   echo ""
   sleep 3
+  
+  pause
   
   stage "2" "环境检测与准备"
   adb_state
@@ -487,7 +490,7 @@ function crack_test()
   adb shell "/system/bin/mount -t ext4 /dev/block/mmcblk0p6 /cache"
   log "Mount /cache Done"
   
-  adb shell "rm -rf /cache/recovery/command"
+  adb shell "/system/bin/rm -rf /cache/recovery/command"
   adb reboot recovery
   
   echo "等待重启……"
@@ -506,10 +509,11 @@ function crack_test()
   
   recovery
   bin2
-  adb shell "echo 'mtp,adb' > /data/property/persist.sys.usb.config"
-  adb shell "echo '1' > /data/property/persist.service.adb.enable"
-  adb shell "chmod -R 444 /data/property/persist.sys.usb.config"
-  adb shell "chmod -R 444 /data/property/persist.service.adb.enable"
+  adb shell "/system/bin/mount -t ext4 /dev/block/mmcblk0p4 /data"
+  adb shell "/system/bin/echo 'mtp,adb' > /data/property/persist.sys.usb.config"
+  adb shell "/system/bin/echo '1' > /data/property/persist.service.adb.enable"
+  adb shell "/system/bin/chmod -R 444 /data/property/persist.sys.usb.config"
+  adb shell "/system/bin/chmod -R 444 /data/property/persist.service.adb.enable"
   adb reboot
   
   echo "等待重启……"
