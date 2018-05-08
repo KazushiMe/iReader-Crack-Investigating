@@ -147,12 +147,12 @@ function recovery()
   adb push $home/crack/lib /system/lib/
   adb shell "/system/bin/mount -t ext4 /dev/block/mmcblk0p5 /system"
   log "挂载 /system 成功"
-  adb shell "/system/bin/echo 'persist.service.adb.enable=1' >> /system/build.prop"
-  adb shell "/system/bin/echo 'persist.service.debuggable=1' >> /system/build.prop"
-  adb shell "/system/bin/echo 'persist.sys.usb.config=mtp,adb' >> /system/build.prop"
-  adb shell "/system/bin/echo 'ro.secure=0' >> /system/build.prop"
-  adb shell "/system/bin/echo 'ro.adb.secure=0' >> /system/build.prop"
-  adb shell "/system/bin/echo 'ro.debuggable=1' >> /system/build.prop"
+  adb shell "echo 'persist.service.adb.enable=1' >> /system/build.prop"
+  adb shell "echo 'persist.service.debuggable=1' >> /system/build.prop"
+  adb shell "echo 'persist.sys.usb.config=mtp,adb' >> /system/build.prop"
+  adb shell "echo 'ro.secure=0' >> /system/build.prop"
+  adb shell "echo 'ro.adb.secure=0' >> /system/build.prop"
+  adb shell "echo 'ro.debuggable=1' >> /system/build.prop"
   log "修改Build.prop成功"
 }
 
