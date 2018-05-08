@@ -104,7 +104,7 @@ function init()
     fi
   else
     echo "初始化adb……"
-    log "Initializing adb"
+    log "初始化adb"
     adb kill-server
     adb start-server
     
@@ -117,7 +117,8 @@ function adb_state()
 {
   # unknown:0 device:1 recovery:2
   state=`adb devices 2> /dev/null`
-  if [[ $(echo "$state" | grep -o "device" | wc -l) == "2" ]]; then
+  [[ $logging == 1 ]] && adb devices
+  if [[ $(echo "$state" | grep -o "device" | wc -l) >= "2" ]]; then
     return 1
   elif [[ $(echo "$state" | grep "recovery") != "" ]]; then
     return 2
@@ -196,6 +197,16 @@ function enable_adb_2()
     times=`expr $times + 1`
   done
   #主程序会关闭adb，不得不循环破解
+}
+
+function enable_adb_3()
+{
+  log "启动期间强制开启adb--chmod"
+  adb shell "echo 'mtp,adb' > /data/property/persist.sys.usb.config"
+  adb shell "echo '1' > /data/property/persist.service.adb.enable"
+  adb shell "chmod -R 444 /data/property/persist.sys.usb.config"
+  adb shell "chmod -R 444 /data/property/persist.service.adb.enable"
+  adb reboot
 }
 
 function update()
@@ -355,9 +366,10 @@ function crack_auto()
   echo ""
   echo "1. 方案一（默认）"
   echo "2. 方案二"
+  echo "3. 方案三（测试）"
   read -n 1 -p "请键入方案序号: " method
-  log "Method: $method"
-  if [[ $method != "1" && $method != "2" ]]; then
+  log "方案: $method"
+  if [[ $method != "1" && $method != "2" && $method != "3" ]]; then
     echo "输入错误，即将执行默认方案一"
     method="1"
   fi
@@ -407,13 +419,19 @@ function crack_auto()
     fi
   done
   
-  enable_adb_2
+  if [[ $method == "3" ]]; then
+    enable_adb_3
+    echo ""
+    echo "正在重启……"
+    log "自动重启"
+  else
+    enable_adb_2
+    echo ""
+    warning "请手动重启阅读器，可能需要重新插入数据线"
+    log "等待手动重启"
+  fi
   
-  echo ""
-  warning "请手动重启阅读器，可能需要重新插入数据线"
-  log "等待手动重启"
   pause "重启进阅读器界面后按任意键继续"
-  
   echo ""
   if [[ $method == "2" ]]; then
       adb_state_2
@@ -752,7 +770,6 @@ function boom()
   echo ""
   sleep 5
   clear
-  rm -rf "$home"
   echo ""
   echo "现在您可以反馈给售后要求 换货 或 退货"
   echo "感谢您的使用，再见"
