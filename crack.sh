@@ -641,7 +641,7 @@ function install_apk()
   echo "将需要安装的apk文件放入 $echo_dir 文件夹中"
   echo "建议使用英文命名"
   pause "按任意键开始安装"
-  list_apk=`ls "$data_dir/*.apk" 2> /dev/null`
+  list_apk=`ls $data_dir/*.apk 2> /dev/null`
   if [[ ! $list_apk ]]; then
     echo ""
     echo "没有找到apk"
