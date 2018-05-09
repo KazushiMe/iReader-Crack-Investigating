@@ -118,7 +118,7 @@ function adb_state()
   # unknown:0 device:1 recovery:2
   state=`adb devices 2> /dev/null`
   [[ $logging == 1 ]] && adb devices
-  if [[ $(echo "$state" | grep -o "device" | wc -l) >= "2" ]]; then
+  if [ $(echo "$state" | grep -o "device" | wc -l) -ge "2" ]; then
     return 1
   elif [[ $(echo "$state" | grep "recovery") != "" ]]; then
     return 2
