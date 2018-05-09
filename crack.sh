@@ -670,7 +670,9 @@ function install_root()
   if [ ! -d "$data_dir" ]; then
     mkdir "$data_dir"
   fi
-  echo "将SuperSU授权管理的apk文件放入 $echo_dir 文件夹中，命名为 Superuser.apk"
+  echo ""
+  warning "将SuperSU授权管理的apk文件放入 $echo_dir 文件夹中，命名为 Superuser.apk"
+  echo ""
   echo "由于版权问题不自带SuperSU，可从群文件获取apk"
   pause "按任意键开始执行root"
   if [ ! -f "$data_dir/Superuser.apk" ]; then
@@ -681,6 +683,8 @@ function install_root()
   fi
   echo ""
   echo "正在执行root……"
+  echo ""
+  echo "正在复制root文件"
   adb shell "mount -o rw,remount /system"
   adb push "$home/crack/bin2/su" "/system/xbin"
   adb push "$home/crack/bin2/su" "/system/bin"
@@ -689,12 +693,14 @@ function install_root()
   adb shell "chmod 6755 /system/xbin/su"
   adb shell "chown 0.0 /system/bin/su"
   adb shell "chmod 6755 /system/bin/su"
-  adb shell "su -d am start -a android.intent.action.MAIN -n eu.chainfire.supersu/.MainActivity"
+  echo "正在启动……"
+  adb shell "su -d"
+  adb shell "am start -a android.intent.action.MAIN -n eu.chainfire.supersu/.MainActivity"
   echo ""
   echo "阅读器上选择：更新二进制文件-->常规方式-->重启"
   sleep 3
   echo ""
-  echo "重启后请打开 SuperSU 检测root是否成功"
+  echo "重启后请自行打开 SuperSU 检测 root 是否成功，若未出现更新二进制即为成功"
   pause "按任意键返回"
   return
 }
