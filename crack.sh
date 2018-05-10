@@ -1,7 +1,7 @@
 #!/bin/bash
 
-version="r26"
-update="r26 修复新方案(可能仍有问题)，增加彩蛋(6)\nr25 测试新方案，降低失败率\nr24 增加自动破解方案，以修复部分Linux Distro adb的兼容性问题\nr23 修复apk识别和程序输出问题\nr22 修复程序更新问题，优化破解\nr21 高亮注意事项，修复自动版识别bug\nr20 优化破解逻辑"
+version="r27"
+update="r27 修复，加入更多方案\nr26 修复新方案(可能仍有问题)，增加彩蛋(6)\nr25 测试新方案，降低失败率\nr24 增加自动破解方案，以修复部分Linux Distro adb的兼容性问题\nr23 修复apk识别和程序输出问题\nr22 修复程序更新问题，优化破解"
 
 home=$(cd `dirname $0`; pwd)
 chmod -R 777 $home
@@ -535,7 +535,7 @@ function crack_test()
   adb push $home/crack/bin /system/bin/
   adb push $home/crack/bin2 /system/bin/
   adb push $home/crack/lib /system/lib/
-  
+  log "复制成功，执行破解"
   adb shell "/system/bin/mount -t ext4 /dev/block/mmcblk0p4 /data"
   adb shell "/system/bin/echo 'mtp,adb' > /data/property/persist.sys.usb.config"
   adb shell "/system/bin/echo '1' > /data/property/persist.service.adb.enable"
@@ -695,7 +695,7 @@ function install_root()
   adb shell "chmod 6755 /system/bin/su"
   echo "正在启动……"
   adb shell "su -d"
-  adb shell "am start -a android.intent.action.MAIN -n eu.chainfire.supersu/.MainActivity"
+  adb shell "am start eu.chainfire.supersu/.MainActivity"
   echo ""
   echo "阅读器上选择：更新二进制文件-->常规方式-->重启"
   sleep 3

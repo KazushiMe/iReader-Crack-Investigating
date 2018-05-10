@@ -68,6 +68,7 @@ git clone https://github.com/KazushiMe/iReader-Crack.git
 rm -rf ./iReader-Crack
 ```
 
+*如果无法破解请检查连接问题，尝试其他方案*
 
 ### 破解后的操作
 
@@ -129,6 +130,8 @@ Windows 10 版请等待更新
 
 ![WSL2](https://raw.githubusercontent.com/KazushiMe/iReader-Crack/master/pic/WSL2.png)
 
+*注：使用360等防护软件可能无法正常使用WSL破解方案*
+
 ## 原理
 
 iReader官方请的工程师，连Recovery的adb都忘关了……
@@ -149,12 +152,4 @@ iReader官方请的工程师，连Recovery的adb都忘关了……
 
 之前所有参与过内测、提供建议的朋友
 
-| 捐赠时间 | 签名 | 金额 | 
-| - | :-: | -: | 
-| 2018/04/24 14:43 | 无 | ￥10.00 |
-| 2018/05/01 11:26 | 论坛：我是小白鼠呀群qq761386865感谢群主的辛苦 | ￥5.00 |
-| 2018/05/01 11:30 | 雷锋 继续加油！！！ | ￥10.00 |
-| 2018/05/02 22:59 | QQ群的暖心，刚说完就把D盘改C盘了 | ￥20.00 |
-| 2018/05/02 23:48 | 非常nice，必须支持！ | ￥10.00 |
-| 2018/05/03 20:46 | 加油呐QAQ 字词 | ￥5.00 |
-| 2018/05/08 17:03 | 虽然搞了以后感觉没什么用，不过还是点赞 | ￥10.00 |
+![捐赠记录](https://github.com/KazushiMe/iReader-Crack/wiki/捐赠记录-%7C-Donation)
