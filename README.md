@@ -1,5 +1,3 @@
-*本工具箱已停止功能性更新，仅修复bug*
-
 # iReader-Crack 工具箱
 
 ### 导航
@@ -56,19 +54,19 @@ git clone https://github.com/KazushiMe/iReader-Crack.git
 
 1. 终端:
 
-```
-./iReader-Crack/crack.sh
-```
+   ```
+   ./iReader-Crack/crack.sh
+   ```
 
 2. 按程序提示操作
 
-*若出现无法更新的情况请删除程序重新加载*
+**若出现无法更新的情况请删除程序重新加载**
 
 ```
 rm -rf ./iReader-Crack
 ```
 
-*如果无法破解请检查连接问题，尝试其他方案*
+**如果无法破解请检查连接问题，尝试其他方案**
 
 ### 破解后的操作
 
@@ -87,24 +85,24 @@ rm -rf ./iReader-Crack
 
 1.	获取官方OTA（在系统更新下载，不要安装）
 
-```
-adb pull /sdcard/adupsfota/update.zip ~
-```
+   ```
+   adb pull /sdcard/adupsfota/update.zip ~
+   ```
 
-解压用户主目录下的 update.zip 得到*真正的* update.zip
+   解压用户主目录下的 update.zip 得到**真正的** update.zip
 
 2.	对 update.zip 包进行修改，删除 update.zip 下的 recovery 文件夹及 boot.img（防止更新封堵破解）
 
 3.	打开 zip 包内 META-INF>com>google>android>updater-script，修改文件：
 
-```
-删除 首行 (!less_than…… 的版本校验
-删除 更新recovery 的命令
-删除 更新boot.img 的命令
-删除 build.prop校验 的命令
-```
+   ```
+   删除 首行 (!less_than…… 的版本校验
+   删除 更新recovery 的命令
+   删除 更新boot.img 的命令
+   删除 build.prop校验 的命令
+   ```
 
-保存后在zip包内替换原文件
+   保存后在zip包内替换原文件
 
 4.	按程序提示操作
 
@@ -112,7 +110,7 @@ adb pull /sdcard/adupsfota/update.zip ~
 
 ### 视频教程
 
-*原生 Linux 教程*：[iReader阅读器开启adb教程](https://www.bilibili.com/video/av21532543/)  by 愿乘风归去
+**原生 Linux 教程**：[iReader阅读器开启adb教程](https://www.bilibili.com/video/av21532543/)  by 愿乘风归去
 
 Windows 10 版请等待更新
 
@@ -122,15 +120,15 @@ Windows 10 版请等待更新
 
 2. 如图所示进行配置
 
-![WSL1](https://raw.githubusercontent.com/KazushiMe/iReader-Crack/master/pic/WSL1.png)
+   ![WSL1](https://raw.githubusercontent.com/KazushiMe/iReader-Crack/master/pic/WSL1.png)
 
 3. 安装好 Windows 的 adb 驱动及程序包
 
 4. 先打开 Windows 的 adb server，再打开 WSL，运行工具箱
 
-![WSL2](https://raw.githubusercontent.com/KazushiMe/iReader-Crack/master/pic/WSL2.png)
+   ![WSL2](https://raw.githubusercontent.com/KazushiMe/iReader-Crack/master/pic/WSL2.png)
 
-*注：使用360等防护软件可能无法正常使用WSL破解方案*
+**注：使用360等防护软件可能无法正常使用WSL破解方案**
 
 ## 原理
 
@@ -142,7 +140,7 @@ iReader官方请的工程师，连Recovery的adb都忘关了……
 
 ## 捐赠
 
-*如果觉得我的作品对您有帮助，可以请我喝一杯咖啡。*
+**如果觉得我的作品对您有帮助，可以请我喝一杯咖啡。**
 
 微信扫描：
 
@@ -152,4 +150,4 @@ iReader官方请的工程师，连Recovery的adb都忘关了……
 
 之前所有参与过内测、提供建议的朋友
 
-![捐赠记录](https://github.com/KazushiMe/iReader-Crack/wiki/捐赠记录-%7C-Donation)
+[捐赠记录](https://github.com/KazushiMe/iReader-Crack/wiki/捐赠记录-%7C-Donation)
