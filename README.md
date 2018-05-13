@@ -122,7 +122,7 @@ Windows 10 版请等待更新
 
    ![WSL1](https://raw.githubusercontent.com/KazushiMe/iReader-Crack/master/pic/WSL1.png)
 
-3. 安装好 Windows 的 adb 驱动及程序包
+3. 安装好 Windows 的 adb 驱动及程序包（放入 System32 或 SysWow64）
 
 4. 先打开 Windows 的 adb server，再打开 WSL，运行工具箱
 
@@ -139,6 +139,16 @@ iReader官方请的工程师，连Recovery的adb都忘关了……
 清空数据进入Recovery → 加入adb（改build.prop） → 强制开启adb（否则会被阅读器主程序关闭）
 
 ## 捐赠
+
+研究破解的过程中把设备烧了😂，本想通过微信打赏来补偿发现好像不太现实。
+
+掌阅活动：微信扫描关注公众号获取积分赢阅读器：
+
+![iReader-公众号](https://kazushime.github.io/KazushiMe/iReader-Crack/master/pic/iReader.jpg)
+
+目前进度：0/70，截止 2018/05/13
+
+![Progress](http://progressed.io/bar/0?title=progress)
 
 **如果觉得我的作品对您有帮助，可以请我喝一杯咖啡。**
 
