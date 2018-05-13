@@ -96,7 +96,7 @@ function init()
     adb_error=`adb get-state 2>&1 > /dev/null` # 2>&1 stderr过滤器
     if [[ $adb_error ]]; then
       warning "请检查 WSL 子系统 与 Windows 的 adb 连接"
-      echo "可能需要将 adb 程序放入 C:\\Windows\\SysWOW64"
+      echo "可能需要将 adb 程序放入 C:\\Windows\\SysWOW64 或 C:\\Windows\\System32"
       log `adb get-state`
       echo "程序检测到错误，即将退出……"
       sleep 5

@@ -144,7 +144,7 @@ iReader官方请的工程师，连Recovery的adb都忘关了……
 
 掌阅活动：微信扫描关注公众号获取积分赢阅读器：
 
-![iReader-公众号](https://kazushime.github.io/KazushiMe/iReader-Crack/master/pic/iReader.jpg)
+![iReader-公众号](https://raw.githubusercontent.com/KazushiMe/iReader-Crack/master/pic/iReader.jpg)
 
 目前进度：0/70，截止 2018/05/13
 
