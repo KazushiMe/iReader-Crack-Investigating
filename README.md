@@ -140,16 +140,6 @@ iReader官方请的工程师，连Recovery的adb都忘关了……
 
 ## 捐赠
 
-研究破解的过程中把设备烧了😂，本想通过微信打赏来补偿发现好像不太现实。
-
-掌阅活动：微信扫描关注公众号获取积分赢阅读器：
-
-![iReader-公众号](https://raw.githubusercontent.com/KazushiMe/iReader-Crack/master/pic/iReader.jpg)
-
-目前进度：0/70，截止 2018/05/13
-
-![Progress](http://progressed.io/bar/0?title=progress)
-
 **如果觉得我的作品对您有帮助，可以请我喝一杯咖啡。**
 
 微信扫描：
