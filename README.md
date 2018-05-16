@@ -34,6 +34,8 @@ Plus 与 0027 及之前版本的 Light 建议使用 [iReaderHelper](https://www.
 
 macOS 系统及部分虚拟机暂不兼容，部分 Windows 版本可能无法正常使用 WSL
 
+破解后无法使用 OTA 更新，需要[手动更新](#更新或恢复)或返厂
+
 欢迎加入 QQ 群组了解详情，群号码：120581715，验证消息：ireaderFans
 
 ## 协议
