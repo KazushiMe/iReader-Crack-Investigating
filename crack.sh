@@ -242,7 +242,7 @@ function main()
   echo ""
   echo "            2. 运行破解主程序（手动版）"
   echo ""
-  echo "            3. 安装更新包（需修改）"
+  echo "            3. 安装系统更新（测试功能，需修改更新包）"
   echo ""
   echo "            4. 批量安装程序"
   echo ""
@@ -579,7 +579,6 @@ function install_ota()
   if [ ! -d "$data_dir" ]; then
     mkdir "$data_dir"
   fi
-  warning "注意: 目前 OTA 更新包需要手动修改，近期因手动更新而变砖的案例较多，请三思而后行"
   echo ""
   echo "请按照教程获取OTA更新包并进行修改"
   echo "将修改后的更新包放入 $echo_dir 文件夹内，重命名为update.zip"
@@ -591,9 +590,15 @@ function install_ota()
     return
   fi
   stage "2" "安装更新"
+  echo "" 
+  echo "正在写入更新命令……"
+  adb shell "echo '--update_package=/cache/update.zip' > /cache/recovery/command"
+  echo ""
+  echo "正在复制OTA更新包"
+  adb push $data_dir/update.zip /cache/update.zip
   if [[ $? == 1 ]]; then
     echo "正在进入Recovery环境"
-    adb reboot recovery
+    adb reboot
     sleep 5
     while true
     do
@@ -604,12 +609,11 @@ function install_ota()
       fi
     done
   fi
+  echo ""
+  echo "等待 Recovery 初始化……"
+  sleep 10
   recovery
   bin2
-  adb shell "/system/bin/mount -t ext4 /dev/block/mmcblk0p6 /cache"
-  echo ""
-  echo "正在复制OTA更新包"
-  adb push $data_dir/update.zip /cache/update.zip
   echo ""
   echo "正在安装更新"
   adb shell "/system/bin/recovery --update_package=/cache/update.zip"
