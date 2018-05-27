@@ -248,6 +248,8 @@ function main()
   echo ""
   echo "            5. 安装 root 与 Superuser"
   echo ""
+  [ -f $home/log.last ] && echo "            6. 彩蛋"
+  echo ""
   echo "   A. 打开设置  B. 模拟返回键  C. 模拟主页键"
   echo ""
   [[ $logging != 1 ]] && echo "            D. 开启 debug 模式"
@@ -580,40 +582,72 @@ function install_ota()
     mkdir "$data_dir"
   fi
   echo ""
+  warning "注意，目前仅支持完整包更新（约200MB），不支持增量包"
   echo "请按照教程获取OTA更新包并进行修改"
   echo "将修改后的更新包放入 $echo_dir 文件夹内，重命名为update.zip"
   pause
+  
   if [ ! -f "$data_dir/update.zip" ]; then
     echo ""
     warning "更新包不存在"
     pause "按任意键返回"
     return
   fi
+  
+  file_size=`du -m "$data_dir/update.zip" | awk '{print $1}'`
+  if [ $file_size -lt 100 ]; then
+    echo ""
+    warning "检测到更新包为增量包，暂不支持"
+    pause "按任意键返回"
+    return
+  fi
+  
+  method=
+  echo ""
+  echo "1. 方案一"
+  echo "3. 方案二"
+  read -n 1 -p "请键入方案序号: " method
+  log "方案: $method"
+  if [[ $method != "1" && $method != "2" ]]; then
+    echo "输入错误，即将执行默认方案一"
+    method="1"
+  fi
+  
   stage "2" "安装更新"
   echo "" 
-  echo "正在写入更新命令……"
-  adb shell "echo '--update_package=/cache/update.zip' > /cache/recovery/command"
-  echo ""
-  echo "正在复制OTA更新包"
-  adb push $data_dir/update.zip /cache/update.zip
-  if [[ $? == 1 ]]; then
-    echo "正在进入Recovery环境"
-    adb reboot
-    sleep 5
-    while true
-    do
-      sleep 0.1
-      adb_state
-      if [[ $? == 2 ]]; then
-        break;
-      fi
-    done
+  if [[ $method == "2" ]]; then
+    echo "正在写入更新命令……"
+    adb shell "echo '--update_package=/cache/update.zip' > /cache/recovery/command"
+    echo ""
+    echo "正在复制OTA更新包"
+    adb push $data_dir/update.zip /cache/update.zip
   fi
-  echo ""
-  echo "等待 Recovery 初始化……"
-  sleep 10
+  echo "正在进入Recovery环境"
+  adb reboot recovery
+  sleep 5
+  
+  while true
+  do
+    sleep 0.1
+    adb_state
+    if [[ $? == 2 ]]; then
+      break;
+    fi
+  done
+  
+  if [[ $method == "2" ]]; then
+    echo ""
+    echo "等待 Recovery 初始化……"
+    sleep 10
+  fi
   recovery
   bin2
+  if [[ $method == "1" ]]; then
+    adb shell "/system/bin/mount -t ext4 /dev/block/mmcblk0p6 /cache"
+    echo ""
+    echo "正在复制OTA更新包"
+    adb push $data_dir/update.zip /cache/update.zip
+  fi
   echo ""
   echo "正在安装更新"
   adb shell "/system/bin/recovery --update_package=/cache/update.zip"

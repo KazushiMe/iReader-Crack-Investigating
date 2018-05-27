@@ -24,7 +24,7 @@
 
 * [鸣谢](#鸣谢)
 
-iReader Plus、Light、Ocean 与 T6 阅读器破解，支持最新系统（截至4月底）
+iReader Plus、Light、Ocean 与 T6 阅读器破解，支持最新系统（截至5月）
 
 Plus 新系统版本需降级以使用蓝牙听书功能：[教程](https://www.einkfans.com/thread-60.htm)
 
@@ -84,6 +84,8 @@ rm -rf ./iReader-Crack
 
 
 ### 更新或恢复
+
+**目前仅支持完整包更新（约200MB），不支持增量包**
 
 1.	获取官方OTA（在系统更新下载，不要安装）
 
