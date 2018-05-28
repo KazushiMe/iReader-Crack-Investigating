@@ -24,7 +24,9 @@
 
 * [鸣谢](#鸣谢)
 
-iReader Plus、Light、Ocean 与 T6 阅读器破解，支持最新系统（截至5月）
+iReader Plus、Light、Ocean 与 T6 阅读器破解，支持0045版及之前的系统
+
+0047版官方已封堵漏洞
 
 Plus 新系统版本需降级以使用蓝牙听书功能：[教程](https://www.einkfans.com/thread-60.htm)
 
