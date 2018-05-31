@@ -1,7 +1,7 @@
 #!/bin/bash
 
-version="r27"
-update="r27 修复，加入更多方案\nr26 修复新方案(可能仍有问题)，增加彩蛋(6)\nr25 测试新方案，降低失败率\nr24 增加自动破解方案，以修复部分Linux Distro adb的兼容性问题\nr23 修复apk识别和程序输出问题\nr22 修复程序更新问题，优化破解"
+version="r28"
+update="r28 停止更新，移除更新包安装功能\nr27 修复，加入更多方案\nr26 修复新方案(可能仍有问题)，增加彩蛋(6)\nr25 测试新方案，降低失败率\nr24 增加自动破解方案，以修复部分Linux Distro adb的兼容性问题\nr23 修复apk识别和程序输出问题\nr22 修复程序更新问题，优化破解"
 
 home=$(cd `dirname $0`; pwd)
 chmod -R 777 $home
@@ -242,13 +242,11 @@ function main()
   echo ""
   echo "            2. 运行破解主程序（手动版）"
   echo ""
-  echo "            3. 安装系统更新（测试功能，需修改更新包）"
+  echo "            3. 批量安装程序"
   echo ""
-  echo "            4. 批量安装程序"
+  echo "            4. 安装 root 与 Superuser"
   echo ""
-  echo "            5. 安装 root 与 Superuser"
-  echo ""
-  [ -f $home/log.last ] && echo "            6. 彩蛋"
+  echo "            6. 彩蛋"
   echo ""
   echo "   A. 打开设置  B. 模拟返回键  C. 模拟主页键"
   echo ""
@@ -567,101 +565,6 @@ function crack_test()
   return
 }
 
-function install_ota()
-{
-  echo ""
-  stage "1" "准备阶段"
-  adb_state
-  if [[ $? == 0 ]]; then
-    warning "未破解或未连接"
-    pause "按任意键返回"
-    return
-  fi
-  echo ""
-  if [ ! -d "$data_dir" ]; then
-    mkdir "$data_dir"
-  fi
-  echo ""
-  warning "注意，目前仅支持完整包更新（约200MB），不支持增量包"
-  echo "请按照教程获取OTA更新包并进行修改"
-  echo "将修改后的更新包放入 $echo_dir 文件夹内，重命名为update.zip"
-  pause
-  
-  if [ ! -f "$data_dir/update.zip" ]; then
-    echo ""
-    warning "更新包不存在"
-    pause "按任意键返回"
-    return
-  fi
-  
-  file_size=`du -m "$data_dir/update.zip" | awk '{print $1}'`
-  if [ $file_size -lt 100 ]; then
-    echo ""
-    warning "检测到更新包为增量包，暂不支持"
-    pause "按任意键返回"
-    return
-  fi
-  
-  method=
-  echo ""
-  echo "1. 方案一"
-  echo "3. 方案二"
-  read -n 1 -p "请键入方案序号: " method
-  log "方案: $method"
-  if [[ $method != "1" && $method != "2" ]]; then
-    echo "输入错误，即将执行默认方案一"
-    method="1"
-  fi
-  
-  stage "2" "安装更新"
-  echo "" 
-  if [[ $method == "2" ]]; then
-    echo "正在写入更新命令……"
-    adb shell "echo '--update_package=/cache/update.zip' > /cache/recovery/command"
-    echo ""
-    echo "正在复制OTA更新包"
-    adb push $data_dir/update.zip /cache/update.zip
-  fi
-  echo "正在进入Recovery环境"
-  adb reboot recovery
-  sleep 5
-  
-  while true
-  do
-    sleep 0.1
-    adb_state
-    if [[ $? == 2 ]]; then
-      break;
-    fi
-  done
-  
-  if [[ $method == "2" ]]; then
-    echo ""
-    echo "等待 Recovery 初始化……"
-    sleep 10
-  fi
-  recovery
-  bin2
-  if [[ $method == "1" ]]; then
-    adb shell "/system/bin/mount -t ext4 /dev/block/mmcblk0p6 /cache"
-    echo ""
-    echo "正在复制OTA更新包"
-    adb push $data_dir/update.zip /cache/update.zip
-  fi
-  echo ""
-  echo "正在安装更新"
-  adb shell "/system/bin/recovery --update_package=/cache/update.zip"
-  sleep 5
-  adb_state
-  if [[ $? != 2 ]]; then
-    echo "更新成功"
-  else
-    warning "更新失败，请重新尝试"
-  fi
-  pause "按任意键返回"
-  return
-}
-
 function install_apk()
 {
   echo ""
@@ -845,9 +748,8 @@ do
   case $key in
     1)      crack_auto;;
     2)      crack;;
-    3)      install_ota;;
-    4)      install_apk;;
-    5)      install_root;;
+    3)      install_apk;;
+    4)      install_root;;
     6)      boom;;
     a|A)    shortcut "setting";;
     b|B)    shortcut "back";;

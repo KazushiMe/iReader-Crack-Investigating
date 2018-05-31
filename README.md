@@ -1,4 +1,4 @@
-# iReader-Crack 工具箱
+# iReader-Crack 工具箱（已停止更新）
 
 ### 导航
 
@@ -26,7 +26,7 @@
 
 iReader Plus、Light、Ocean 与 T6 阅读器破解，支持0045版及之前的系统
 
-0047版官方已封堵漏洞
+**0047版官方已封堵漏洞**
 
 Plus 新系统版本需降级以使用蓝牙听书功能：[教程](https://www.einkfans.com/thread-60.htm)
 
@@ -36,7 +36,7 @@ Plus 与 0027 及之前版本的 Light 建议使用 [iReaderHelper](https://www.
 
 macOS 系统及部分虚拟机暂不兼容，部分 Windows 版本可能无法正常使用 WSL
 
-破解后无法使用 OTA 更新，需要[手动更新](#更新或恢复)或返厂
+破解后无法使用 OTA 更新，需要返厂，建议先恢复出厂设置
 
 欢迎加入 QQ 群组了解详情，群号码：120581715，验证消息：ireaderFans
 
@@ -83,36 +83,6 @@ rm -rf ./iReader-Crack
     如对 root 无要求的用户可以使用 [EasyTouch](https://www.coolapk.com/apk/com.shere.easytouch) 进行模拟键操作
 
 2.  开启root后可[安装Xposed框架](https://www.einkfans.com/thread-51.htm)，并可使用自定义化程度更高的 Xposed Edge Pro
-
-
-### 更新或恢复
-
-**目前仅支持完整包更新（约200MB），不支持增量包**
-
-1.	获取官方OTA（在系统更新下载，不要安装）
-
-   ```
-   adb pull /sdcard/adupsfota/update.zip ~
-   ```
-
-   解压用户主目录下的 update.zip 得到**真正的** update.zip
-
-2.	对 update.zip 包进行修改，删除 update.zip 下的 recovery 文件夹及 boot.img（防止更新封堵破解）
-
-3.	打开 zip 包内 META-INF>com>google>android>updater-script，修改文件：
-
-   ```
-   删除 首行 (!less_than…… 的版本校验
-   删除 更新recovery 的命令
-   删除 更新boot.img 的命令
-   删除 build.prop校验 的命令
-   ```
-
-   保存后在zip包内替换原文件
-
-4.	按程序提示操作
-
-[更新包资源](https://www.einkfans.com/thread-2.htm)
 
 ### 视频教程
 
