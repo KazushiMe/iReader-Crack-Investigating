@@ -801,9 +801,9 @@ function install_ota()
   echo ""
   echo "正在等待 Recovery 初始化……"
   sleep 15
-  adb push "$home/crack/bin" /system/bin/ > /dev/null
-  adb push "$home/crack/lib" /system/lib/ > /dev/null
-  adb push "$home/crack/bin2/recovery" /system/bin/ > /dev/null
+  adb push "$home/crack/bin" /system/bin/
+  adb push "$home/crack/lib" /system/lib/
+  adb push "$home/crack/bin2/recovery" /system/bin/
   echo ""
   echo "请等待阅读器左下角出现文字后，拔掉 USB 数据线"
   adb shell "/system/bin/recovery --update_package=/data/update.zip"
@@ -817,6 +817,7 @@ function install_ota()
   sleep 1
   echo ""
   echo "正在更新……"
+  adb push "$home/crack/bin2/recovery" /system/bin/
   adb shell "/system/bin/recovery --update_package=/data/update.zip"
   echo "此时应出现 Android 机器人及进度条"
   warning "如果未出现请立即暂停程序 (Ctrl+C) 并拍照反馈"
