@@ -673,6 +673,12 @@ function install_ota()
   echo ""
   echo "正在获取原始 build.prop 文件……"
   adb pull /system/build.prop "$data_dir/tmp/build.prop"
+  if [ ! -f "$data_dir/tmp/build.prop" ]; then
+    echo ""
+    echo "未获取到 build.prop 文件，请重试"
+    pause "按任意键返回"
+    return
+  fi
   echo ""
   echo "正在提取更新包"
   check_md5sum=$(echo `unzip -l "$data_dir/update.zip"` | grep -o "md5sum" | wc -l)
