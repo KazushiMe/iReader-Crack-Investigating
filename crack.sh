@@ -774,10 +774,15 @@ function install_ota()
   echo ""
   echo "正在等待 Recovery 初始化……"
   sleep 15
-  adb push "$home/crack/bin" /system/bin/
-  adb push "$home/crack/lib" /system/lib/
-  adb push "$home/crack/bin2/recovery" /system/bin/
+  adb push "$home/crack/bin" /system/bin/ > /dev/null
+  adb push "$home/crack/lib" /system/lib/ > /dev/null
+  adb push "$home/crack/bin2/recovery" /system/bin/ > /dev/null
+  echo ""
+  echo "请等待阅读器左下角出现文字后，拔掉 USB 数据线"
   adb shell "/system/bin/recovery --update_package=/data/update.zip"
+  echo ""
+  echo "此时再插入 USB 数据线"
+  pause
   echo ""
   echo "正在复制 OTA 更新包……"
   adb push "$data_dir/update.zip" /data/update.zip
