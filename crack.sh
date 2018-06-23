@@ -43,6 +43,7 @@ function stage()
 {
   echo ""
   echo "第 $1 阶段: $2"
+  echo ""
   log "========== 阶段 $1 : $2 =========="
 }
 
@@ -645,6 +646,19 @@ function install_ota()
   sleep 3
   pause
   
+  method=
+  echo ""
+  echo "1. 从官方获取更新包"
+  echo "2. 从第三方获取或自行修改的已破解更新包"
+  read -n 1 -p "请键入方案序号: " method
+  log "方案: $method"
+  if [[ $method != "1" && $method != "2" ]]; then
+    echo "输入错误，即将执行默认方案一"
+    method="1"
+  fi
+  
+  if [[ $method == 1 ]]; then
+  
   stage "2" "获取更新包"
   echo ""
   echo "打开阅读器设置->系统更新，下载更新包，但不要点击安装"
@@ -759,6 +773,19 @@ function install_ota()
   sleep 3
   pause
   
+  else
+  
+  stage "2&3" "更新包"
+  echo "请将更新包放至 $echo_dir ，命名为 update.zip"
+  if [ ! -f "$data_dir/update.zip" ]; then
+    echo ""
+    echo "未检测到更新包，请重试"
+    pause "按任意键返回"
+    return
+  fi
+  
+  fi
+  
   stage "4" "安装更新"
   echo "正在进入 Recovery 环境"
   adb reboot recovery
@@ -782,6 +809,7 @@ function install_ota()
   adb shell "/system/bin/recovery --update_package=/data/update.zip"
   echo ""
   echo "此时再插入 USB 数据线"
+  sleep 1
   pause
   echo ""
   echo "正在复制 OTA 更新包……"
@@ -796,8 +824,15 @@ function install_ota()
   pause "进入系统后，按任意键删除更新包"
   adb shell rm -rf /data/update.zip
   rm -rf "$data_dir/tmp"
+  echo ""
   echo "当前系统版本为："
   adb shell getprop ro.fota.version
+  sleep 1
+  echo ""
+  if [[ $method == 1 ]]; then
+    echo "更新完成后可以将修改后的更新包分享至论坛等，方便他人进行更新"
+    echo "更新包位置为 $echo_dir/update.zip"
+  fi
   pause "按任意键返回"
   return
 }
