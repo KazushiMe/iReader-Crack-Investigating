@@ -1,7 +1,7 @@
 #!/bin/bash
 
-version="r28"
-update="r28 停止更新，移除更新包安装功能\nr27 修复，加入更多方案\nr26 修复新方案(可能仍有问题)，增加彩蛋(6)\nr25 测试新方案，降低失败率\nr24 增加自动破解方案，以修复部分Linux Distro adb的兼容性问题\nr23 修复apk识别和程序输出问题\nr22 修复程序更新问题，优化破解"
+version="r29"
+update="r29 重新启用手动更新功能，更新后保留破解（测试）\nr28 停止更新，移除更新包安装功能\nr27 修复，加入更多方案\nr26 修复新方案(可能仍有问题)，增加彩蛋(6)\nr25 测试新方案，降低失败率\nr24 增加自动破解方案，以修复部分Linux Distro adb的兼容性问题\nr23 修复apk识别和程序输出问题"
 
 home=$(cd `dirname $0`; pwd)
 chmod -R 777 $home
@@ -56,6 +56,9 @@ function init()
     log "当前使用的系统不是Ubuntu"
     pause
   fi
+  echo ""
+  echo "本程序需要 adb bspatch zip unzip 二进制文件"
+  echo ""
   if [[ ${adb_exec:0:1} != "/" ]]; then
     warning "未检测到adb程序"
     log "未检测到adb程序"
@@ -63,13 +66,13 @@ function init()
       pause "按任意键执行安装，可能需要输入密码"
       log "正在安装adb程序"
       sudo apt-get update
-      sudo apt-get install adb
+      sudo apt-get install adb bspatch zip unzip
       init
       return
     else
       warning "请安装adb后再执行本程序"
       pause "按任意键退出"
-      log "未安装，退出"
+      log "未安装adb，退出"
       exit
     fi
   fi
@@ -110,6 +113,63 @@ function init()
     
     data_dir="$home/data"
     echo_dir=$data_dir
+  fi
+  
+  bspatch_exec=`which bspatch`
+  if [[ ${bspatch_exec:0:1} != "/" ]]; then
+    warning "未检测到 bspatch 程序"
+    log "未检测到 bspatch 程序"
+    if [[ ${issue:0:6} == "Ubuntu" ]]; then
+      pause "按任意键执行安装，可能需要输入密码"
+      log "正在安装 bspatch 程序"
+      sudo apt-get update
+      sudo apt-get install bspatch zip unzip
+      init
+      return
+    else
+      warning "请安装 bspatch 后再执行本程序"
+      pause "按任意键退出"
+      log "未安装bspatch，退出"
+      exit
+    fi
+  fi
+  
+  zip_exec=`which zip`
+  if [[ ${zip_exec:0:1} != "/" ]]; then
+    warning "未检测到 zip 程序"
+    log "未检测到 zip 程序"
+    if [[ ${issue:0:6} == "Ubuntu" ]]; then
+      pause "按任意键执行安装，可能需要输入密码"
+      log "正在安装 zip 程序"
+      sudo apt-get update
+      sudo apt-get install zip unzip
+      init
+      return
+    else
+      warning "请安装 zip 后再执行本程序"
+      pause "按任意键退出"
+      log "未安装zip，退出"
+      exit
+    fi
+  fi
+
+  unzip_exec=`which unzip`
+  if [[ ${unzip_exec:0:1} != "/" ]]; then
+    warning "未检测到 unzip 程序"
+    log "未检测到 unzip 程序"
+    if [[ ${issue:0:6} == "Ubuntu" ]]; then
+      pause "按任意键执行安装，可能需要输入密码"
+      log "正在安装 unzip 程序"
+      sudo apt-get update
+      sudo apt-get install unzip
+      init
+      return
+    else
+      warning "请安装 unzip 后再执行本程序"
+      pause "按任意键退出"
+      log "未安装unzip，退出"
+      exit
+    fi
   fi
 }
 
@@ -155,11 +215,6 @@ function recovery()
   adb shell "echo 'ro.adb.secure=0' >> /system/build.prop"
   adb shell "echo 'ro.debuggable=1' >> /system/build.prop"
   log "修改Build.prop成功"
-}
-
-function bin2()
-{
-  adb push $home/crack/bin2 /system/bin/
 }
 
 function enable_adb()
@@ -234,6 +289,7 @@ function main()
   adb_state
   if [[ $? == 1 ]]; then
     echo "              USB 调试已连接"
+    echo "          当前系统版本: " `adb shell getprop ro.fota.version`
   elif [[ $? == 2 ]]; then
     echo "          已进入 Recovery 模式"
   fi
@@ -246,7 +302,9 @@ function main()
   echo ""
   echo "            4. 安装 root 与 Superuser"
   echo ""
-  echo "            6. 彩蛋"
+  echo "            5. 手动安装更新包（保留破解）"
+  echo ""
+  echo "            6. 返厂彩蛋"
   echo ""
   echo "   A. 打开设置  B. 模拟返回键  C. 模拟主页键"
   echo ""
@@ -533,7 +591,7 @@ function crack_test()
   
   log "复制Recovery所需文件"
   adb push $home/crack/bin /system/bin/
-  adb push $home/crack/bin2 /system/bin/
+  adb push $home/crack/bin2/chmod /system/bin/
   adb push $home/crack/lib /system/lib/
   log "复制成功，执行破解"
   adb shell "/system/bin/mount -t ext4 /dev/block/mmcblk0p4 /data"
@@ -561,6 +619,174 @@ function crack_test()
     log "破解失败"
     log `adb devices`
   fi
+  pause "按任意键返回"
+  return
+}
+
+function install_ota()
+{
+  echo ""
+  stage "1" "准备阶段"
+  adb_state
+  if [[ $? == 0 ]]; then
+    warning "未破解或未连接"
+    pause "按任意键返回"
+    return
+  fi
+  echo ""
+  if [ ! -d "$data_dir" ]; then
+    mkdir "$data_dir"
+  fi
+  if [ ! -d "$data_dir/tmp" ]; then
+    mkdir "$data_dir/tmp"
+  fi
+  echo "请根据程序提示及教程对更新包进行修改并安装"
+  echo "该功能处于测试阶段，可能会产生意想不到的结果"
+  sleep 3
+  pause
+  
+  stage "2" "获取更新包"
+  echo ""
+  echo "打开阅读器设置->系统更新，下载更新包，但不要点击安装"
+  sleep 3
+  pause
+  adb pull /sdcard/adupsfota/update.zip "$data_dir/update.zip"
+  if [ ! -f "$data_dir/update.zip" ]; then
+    echo ""
+    echo "未检测到更新包，请重试"
+    pause "按任意键返回"
+    return
+  fi
+  ota_size=`du -m "$data_dir/update.zip" | awk '{print $1}'`
+  if [ $ota_size -lt 150 ]; then
+    echo "检测到为增量更新包"
+    is_patch=true
+  else
+    echo "检测到为完整更新包"
+    is_patch=false
+    echo "暂不支持"
+    pause "按任意键返回"
+    return
+  fi
+  
+  stage "3" "修改更新包"
+  echo ""
+  echo "正在获取原始 build.prop 文件……"
+  adb pull /system/build.prop "$data_dir/tmp/build.prop"
+  echo ""
+  echo "正在提取更新包"
+  check_md5sum=$(echo `unzip -l "$data_dir/update.zip"` | grep -o "md5sum" | wc -l)
+  if [ $check_md5sum -ge "1" ]; then
+    unzip "$data_dir/update.zip" "update.zip" -d "$data_dir/tmp/"
+    mv "$data_dir/tmp/update.zip" "$data_dir/update.zip"
+  fi
+  echo ""
+  echo "正在处理更新包……"
+  sleep 3
+  #提取updater-script
+  unzip "$data_dir/update.zip" "META-INF/com/google/android/updater-script" -d "$data_dir/tmp/" > /dev/null
+  mv "$data_dir/tmp/META-INF/com/google/android/updater-script" "$data_dir"
+  #处理build.prop
+  unzip "$data_dir/update.zip" "patch/system/build.prop.p" -d "$data_dir/tmp/" > /dev/null
+  mv "$data_dir/tmp/patch/system/build.prop.p" "$data_dir/tmp/"
+  bspatch "$data_dir/tmp/build.prop" "$data_dir/build.prop" "$data_dir/tmp/build.prop.p" > /dev/null
+  echo 'persist.service.adb.enable=1' >> "$data_dir/build.prop"
+  echo 'persist.service.debuggable=1' >> "$data_dir/build.prop"
+  echo 'persist.sys.usb.config=mtp,adb' >> "$data_dir/build.prop"
+  echo 'ro.secure=0' >> "$data_dir/build.prop"
+  echo 'ro.adb.secure=0' >> "$data_dir/build.prop"
+  echo 'ro.debuggable=1' >> "$data_dir/build.prop"
+  mkdir "$data_dir/tmp/system"
+  mv "$data_dir/build.prop" "$data_dir/tmp/system/build.prop"
+  cd "$data_dir/tmp"
+  zip "$data_dir/update.zip" system/build.prop > /dev/null
+  #移除文件
+  zip -d "$data_dir/update.zip" META-INF/com/google/android/updater-script boot.img recovery* patch/system/build.prop.p patch/system/etc/recovery-resource.dat.p system/etc/recovery-resource.dat system/recovery-from-boot.p > /dev/null
+  
+  echo ""
+  echo "手动修改阶段:"
+  echo ""
+  echo "用高级文本编辑器 (请勿使用记事本) 打开 $echo_dir 下的 updater-script 文件"
+  sleep 3
+  echo ""
+  echo "全文搜索 recovery"
+  sleep 1
+  echo "删除 apply_patch_check(\"/system/etc/recovery-resource.dat\" **** \");"
+  echo "     apply_patch(\"/system/etc/recovery-resource.dat\" **** \");"
+  echo "     delete(\"/system/recovery-from- **** \");"
+  echo "     package_extract_dir(\"recovery\", \"/system\");"
+  echo "这 几段 文本，删到 ); 结束"
+  sleep 5
+  echo ""
+  echo "搜索 \"/system/recovery.img\" ，删除该行并保留 ); "
+  echo ""
+  echo "示例:"
+  echo "如搜索到:"
+  echo "delete(\"/system/framework/framework2.jar\","
+  echo "       \"/system/framework/services.jar\","
+  echo "       \"/system/recovery.img\");"
+  echo "修改为:"
+  echo "delete(\"/system/framework/framework2.jar\","
+  echo "       \"/system/framework/services.jar\");"
+  sleep 5
+  echo ""
+  echo "全文搜索 boot"
+  sleep 1
+  echo "删除 package_extract_file(\"boot.img\", \"/dev/block/mmcblk0p1\"); 这行文本"
+  sleep 3
+  echo ""
+  echo "搜索 apply_patch(\"/system/build.prop\""
+  echo "删除 该段 文本，删到 ); 结束"
+  sleep 3
+  echo "保存文件"
+  sleep 3
+  pause
+  
+  echo ""
+  echo "继续处理更新包……"
+  mv "$data_dir/updater-script" "$data_dir/tmp/META-INF/com/google/android/updater-script"
+  cd "$data_dir/tmp"
+  zip "$data_dir/update.zip" META-INF/com/google/android/updater-script > /dev/null
+  
+  echo ""
+  echo "处理完成"
+  sleep 3
+  pause
+  
+  stage "4" "安装更新"
+  echo "正在进入 Recovery 环境"
+  adb reboot recovery
+  sleep 3
+  while true
+  do
+    adb_state
+    if [[ $? == 2 ]]; then
+      log "已进入Recovery"
+      break
+    fi
+  done
+  echo ""
+  echo "正在等待 Recovery 初始化……"
+  sleep 15
+  adb push "$home/crack/bin" /system/bin/
+  adb push "$home/crack/lib" /system/lib/
+  adb push "$home/crack/bin2/recovery" /system/bin/
+  adb shell "/system/bin/recovery --update_package=/data/update.zip"
+  echo ""
+  echo "正在复制 OTA 更新包……"
+  adb push "$data_dir/update.zip" /data/update.zip
+  sleep 1
+  echo ""
+  echo "正在更新……"
+  adb shell "/system/bin/recovery --update_package=/data/update.zip"
+  echo "此时应出现 Android 机器人及进度条"
+  warning "如果未出现请立即暂停程序 (Ctrl+C) 并拍照反馈"
+  echo ""
+  pause "进入系统后，按任意键删除更新包"
+  adb shell rm -rf /data/update.zip
+  rm -rf "$data_dir/tmp"
+  echo "当前系统版本为："
+  adb shell getprop ro.fota.version
   pause "按任意键返回"
   return
 }
@@ -731,6 +957,7 @@ echo "本作品采用知识共享署名-非商业性使用-相同方式共享 3.
 echo "该工具箱完全免费，请在协议允许的范围内进行使用"
 echo ""
 echo "详细使用方法请访问: https://github.com/KazushiMe/iReader-Crack/"
+warning "注意：请勿在程序未接受键盘输入时键入文本，否则可能会造成意想不到的后果"
 if [ ! -f "$home/updated" ]; then
   echo ""
   echo "近期更新日志："
@@ -750,6 +977,7 @@ do
     2)      crack;;
     3)      install_apk;;
     4)      install_root;;
+    5)      install_ota;;
     6)      boom;;
     a|A)    shortcut "setting";;
     b|B)    shortcut "back";;
