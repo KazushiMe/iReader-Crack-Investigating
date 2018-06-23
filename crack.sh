@@ -864,9 +864,13 @@ function install_apk()
   fi
   echo ""
   echo "正在安装……"
-  cd "$data_dir"
-  adb install *.apk
-  echo "安装完成"
+  adb shell rm -rf /data/local/tmp/*.apk
+  for apk in $data_dir/*.apk
+  do
+    adb install -r $apk
+  done
+  echo "安装完成，请自行删除已安装的应用安装包"
+  pause "按任意键返回"
   return
 }
 
@@ -938,6 +942,7 @@ function shortcut()
     adb shell input keyevent 3
   fi
   echo "完成"
+  sleep 1
   return
 }
 
@@ -1005,6 +1010,7 @@ echo "该工具箱完全免费，请在协议允许的范围内进行使用"
 echo ""
 echo "详细使用方法请访问: https://github.com/KazushiMe/iReader-Crack/"
 warning "注意：请勿在程序未接受键盘输入时键入文本，否则可能会造成意想不到的后果"
+echo "若程序执行出现长时间停滞建议退出重新尝试一次"
 if [ ! -f "$home/updated" ]; then
   echo ""
   echo "近期更新日志："
