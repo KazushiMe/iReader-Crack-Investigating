@@ -25,9 +25,7 @@ apply_patch_check("/system/bin/debuggerd", "a692df082959c0e65a331a58ad4b8a7810fa
 set_progress(0.040598);
 apply_patch_check("/system/bin/mdnsd", "8ed7ff8ac3da258177b2cbc34a096fb4d27d903f", "4ab09e4f8e51d8dd90474b4e2cff924ff52542f4") || abort("\"/system/bin/mdnsd\" has unexpected contents.");
 set_progress(0.042769);
-apply_patch_check("/system/build.prop", "4e35842053270d9e62fc884c1360c2f0c44b987b", "a4554f025eec89a4355e5e0af4660dfb9c49ba32") || abort("\"/system/build.prop\" has unexpected contents.");
 set_progress(0.042785);
-apply_patch_check("/system/etc/recovery-resource.dat", "042dd4f5ae34fc03d6bde79f08af4974149c8c6c", "8cb022d94fb129c438a246729f5b13aa873bf88e") || abort("\"/system/etc/recovery-resource.dat\" has unexpected contents.");
 set_progress(0.044876);
 apply_patch_check("/system/etc/security/otacerts.zip", "cdbde118524964b86055e4a99ab53b4876389182", "b6643cf9041b725382eb6015a66e94c1703e5f0c") || abort("\"/system/etc/security/otacerts.zip\" has unexpected contents.");
 set_progress(0.044888);
@@ -162,8 +160,7 @@ apply_patch_space(25912073) || abort("Not enough free space on /system to apply 
 
 ui_print("Removing unneeded files...");
 delete("/system/framework/framework2.jar",
-       "/system/framework/services.jar",
-       "/system/recovery.img");
+       "/system/framework/services.jar");
 show_progress(0.800000, 0);
 ui_print("Patching system files...");
 apply_patch("/system/app/Browser.apk", "-",
@@ -206,9 +203,6 @@ apply_patch("/system/bin/mdnsd", "-",
             8ed7ff8ac3da258177b2cbc34a096fb4d27d903f, 255404,
             4ab09e4f8e51d8dd90474b4e2cff924ff52542f4, package_extract_file("patch/system/bin/mdnsd.p"));
 set_progress(0.042601);
-apply_patch("/system/etc/recovery-resource.dat", "-",
-            042dd4f5ae34fc03d6bde79f08af4974149c8c6c, 246052,
-            8cb022d94fb129c438a246729f5b13aa873bf88e, package_extract_file("patch/system/etc/recovery-resource.dat.p"));
 set_progress(0.044684);
 apply_patch("/system/etc/security/otacerts.zip", "-",
             cdbde118524964b86055e4a99ab53b4876389182, 1316,
@@ -463,14 +457,10 @@ apply_patch("/system/xbin/oprofiled", "-",
             5cc9d4fdd85e1e4a036eb4c06bc5f22a2c618c9d, package_extract_file("patch/system/xbin/oprofiled.p"));
 set_progress(0.966258);
 set_progress(0.999984);
-package_extract_file("boot.img", "/dev/block/mmcblk0p1");
-delete("/system/recovery-from-boot.p",
-       "/system/etc/install-recovery.sh");
 show_progress(0.100000, 10);
 ui_print("Unpacking new files...");
 package_extract_dir("system", "/system");
 ui_print("Unpacking new recovery...");
-package_extract_dir("recovery", "/system");
 ui_print("Symlinks and permissions...");
 set_metadata_recursive("/system", "uid", 0, "gid", 0, "dmode", 0755, "fmode", 0644, "capabilities", 0x0, "selabel", "u:object_r:system_file:s0");
 set_metadata_recursive("/system/bin", "uid", 0, "gid", 2000, "dmode", 0755, "fmode", 0755, "capabilities", 0x0, "selabel", "u:object_r:system_file:s0");
@@ -512,8 +502,5 @@ set_metadata("/system/xbin/procrank", "uid", 0, "gid", 0, "mode", 06755, "capabi
 set_metadata("/system/xbin/su", "uid", 0, "gid", 0, "mode", 06755, "capabilities", 0x0, "selabel", "u:object_r:su_exec:s0");
 set_metadata("/system/xbin/tcpdump", "uid", 0, "gid", 0, "mode", 06755, "capabilities", 0x0, "selabel", "u:object_r:system_file:s0");
 ui_print("Patching remaining system files...");
-apply_patch("/system/build.prop", "-",
-            4e35842053270d9e62fc884c1360c2f0c44b987b, 1906,
-            a4554f025eec89a4355e5e0af4660dfb9c49ba32, package_extract_file("patch/system/build.prop.p"));
 set_metadata("/system/build.prop", "uid", 0, "gid", 0, "mode", 0644, "capabilities", 0x0);
 unmount("/system");
