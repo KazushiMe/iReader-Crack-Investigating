@@ -1,7 +1,7 @@
 #!/bin/bash
 
-version="r29"
-update="r29 重新启用手动更新功能，更新后保留破解（测试）\nr28 停止更新，移除更新包安装功能\nr27 修复，加入更多方案\nr26 修复新方案(可能仍有问题)，增加彩蛋(6)\nr25 测试新方案，降低失败率\nr24 增加自动破解方案，以修复部分Linux Distro adb的兼容性问题\nr23 修复apk识别和程序输出问题"
+version="r30"
+update="r30 完善手动修改更新包步骤\nr29 重新启用手动更新功能，更新后保留破解（测试）\nr28 停止更新，移除更新包安装功能\nr27 修复，加入更多方案\nr26 修复新方案(可能仍有问题)，增加彩蛋(6)\nr25 测试新方案，降低失败率\nr24 增加自动破解方案，以修复部分Linux Distro adb的兼容性问题\nr23 修复apk识别和程序输出问题"
 
 home=$(cd `dirname $0`; pwd)
 chmod -R 777 $home
@@ -727,16 +727,18 @@ function install_ota()
   echo "手动修改阶段:"
   echo ""
   echo "用高级文本编辑器 (请勿使用记事本) 打开 $echo_dir 下的 updater-script 文件"
-  sleep 3
+  echo ""
+  echo "修改范例请见: https://github.com/KazushiMe/iReader-Crack/commit/ab8c54"
+  pause
+  echo "以下是详细说明:"
   echo ""
   echo "全文搜索 recovery"
-  sleep 1
   echo "删除 apply_patch_check(\"/system/etc/recovery-resource.dat\" **** \");"
   echo "     apply_patch(\"/system/etc/recovery-resource.dat\" **** \");"
   echo "     delete(\"/system/recovery-from- **** \");"
   echo "     package_extract_dir(\"recovery\", \"/system\");"
   echo "这 几段 文本，删到 ); 该行结束"
-  sleep 5
+  sleep 1
   echo ""
   echo "搜索 \"/system/recovery.img\" ，删除该行并保留 ); "
   echo ""
@@ -748,19 +750,17 @@ function install_ota()
   echo "修改为:"
   echo "delete(\"/system/framework/framework2.jar\","
   echo "       \"/system/framework/services.jar\");"
-  sleep 5
+  sleep 1
   echo ""
   echo "全文搜索 boot"
-  sleep 1
   echo "删除 package_extract_file(\"boot.img\", \"/dev/block/mmcblk0p1\"); 这行文本"
-  sleep 3
   echo ""
+  echo "全文搜索 build.prop"
   echo "搜索 apply_patch_check(\"/system/build.prop\""
   echo "搜索 apply_patch(\"/system/build.prop\""
   echo "删除 该段 文本，删到 ); 该行结束"
-  sleep 3
+  echo ""
   echo "保存文件"
-  sleep 3
   pause
   
   echo ""
