@@ -735,7 +735,7 @@ function install_ota()
   echo "     apply_patch(\"/system/etc/recovery-resource.dat\" **** \");"
   echo "     delete(\"/system/recovery-from- **** \");"
   echo "     package_extract_dir(\"recovery\", \"/system\");"
-  echo "这 几段 文本，删到 ); 结束"
+  echo "这 几段 文本，删到 ); 该行结束"
   sleep 5
   echo ""
   echo "搜索 \"/system/recovery.img\" ，删除该行并保留 ); "
@@ -755,8 +755,9 @@ function install_ota()
   echo "删除 package_extract_file(\"boot.img\", \"/dev/block/mmcblk0p1\"); 这行文本"
   sleep 3
   echo ""
+  echo "搜索 apply_patch_check(\"/system/build.prop\""
   echo "搜索 apply_patch(\"/system/build.prop\""
-  echo "删除 该段 文本，删到 ); 结束"
+  echo "删除 该段 文本，删到 ); 该行结束"
   sleep 3
   echo "保存文件"
   sleep 3
@@ -818,9 +819,10 @@ function install_ota()
   echo ""
   echo "正在更新……"
   adb push "$home/crack/bin2/recovery" /system/bin/
-  adb shell "/system/bin/recovery --update_package=/data/update.zip"
+  sleep 1
   echo "此时应出现 Android 机器人及进度条"
   warning "如果未出现请立即暂停程序 (Ctrl+C) 并拍照反馈"
+  adb shell "/system/bin/recovery --update_package=/data/update.zip"
   echo ""
   pause "进入系统后，按任意键删除更新包"
   adb shell rm -rf /data/update.zip
