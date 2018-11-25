@@ -22,9 +22,11 @@
 
 * [鸣谢](#鸣谢)
 
-iReader Plus、Light、Ocean 与 T6 阅读器破解，支持0045版及之前的系统
+iReader Plus、Light、Ocean 与 T6 阅读器破解，仅支持0045版及之前的系统
 
-**0047版起官方已封堵漏洞**，可通过手动修改安装包升级
+[iReader破解指南](https://www.einkfans.com/thread-109.htm)
+
+**0047版起官方已封堵漏洞**，可通过手动修改安装包升级（据说还有**返厂降级**这种操作？）
 
 Plus 新系统版本需降级以使用蓝牙听书功能：[教程](https://www.einkfans.com/thread-60.htm)
 
@@ -34,9 +36,7 @@ Plus 与 0027 及之前版本的 Light 建议使用 [iReaderHelper](https://www.
 
 macOS 系统及部分虚拟机暂不兼容，部分 Windows 版本可能无法正常使用 WSL
 
-破解后无法使用自动更新，如需保留破解可使用 5. 手动安装更新包（保留破解） ，否则建议返厂 (备份后使用 6. 返厂彩蛋)
-
-欢迎加入 QQ 群组了解详情，群号码：120581715，验证消息：ireaderFans
+破解后无法使用自动更新，如需保留破解可使用 "5. 手动安装更新包（保留破解）" ，否则建议返厂 (备份后使用 "6. 返厂彩蛋")
 
 ## 协议
 
@@ -118,7 +118,7 @@ iReader官方请的工程师，连Recovery的adb都忘关了……
 
 微信扫描：
 
-![iReader-Crack 捐赠](https://kazushime.github.io/file/pic/WeChat_Donate.jpg)
+![iReader-Crack 捐赠](https://raw.githubusercontent.com/KazushiMe/file/master/pic/WeChat_Donate.jpg)
 
 ## 鸣谢
 
